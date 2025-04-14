@@ -5,6 +5,23 @@ spring:
     name: hs-blog
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/hs_blog?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/hs-blog?useSSL=false&serverTimezone=UTC
     username: root
     password: 123456
+# MyBatis-Plus 配置
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml  # XML 文件位置
+  type-aliases-package: com.example.entity        # 实体类包路径
+  configuration:
+    map-underscore-to-camel-case: true            # 开启驼峰命名转换
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 打印 SQL 日志
+#swagger 配置
+#swagger:
+#  enabled: true
+#  title: "API文档"
+#  group: "default"
+#knife4j:
+#  enable: true
+#  scan-package: com.hs.blog.controller
+#  setting:
+#    language: zh-CN

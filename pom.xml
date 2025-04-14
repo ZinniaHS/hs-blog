@@ -56,6 +56,11 @@
             <version>3.5.11</version>
         </dependency>
         <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-jsqlparser</artifactId>
+            <version>3.5.9</version>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.36</version>
@@ -95,23 +100,23 @@
             <version>RELEASE</version>
             <scope>compile</scope>
         </dependency>
-        <!-- Swagger的增强knife4j -->
+        <!-- Knife4j 核心依赖 -->
+<!--        <dependency>-->
+<!--            <groupId>com.github.xiaoymin</groupId>-->
+<!--            <artifactId>knife4j-spring-boot-starter</artifactId>-->
+<!--            <version>3.0.3</version>-->
+<!--        </dependency>-->
+        <!-- Spring Boot 3.x + OpenAPI 3.x -->
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
-            <artifactId>knife4j-spring-boot-starter</artifactId>
-            <version>3.0.3</version>
+            <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
+            <version>4.5.0</version>
         </dependency>
-        <!-- SLF4J API -->
+        <!-- Swagger 3 核心依赖 -->
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>2.0.9</version>
-        </dependency>
-        <!-- Logback 绑定器（实现） -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.4.11</version>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>3.0.0</version>
         </dependency>
     </dependencies>
 

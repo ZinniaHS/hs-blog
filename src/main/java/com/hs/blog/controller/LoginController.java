@@ -3,7 +3,6 @@ package com.hs.blog.controller;
 import com.hs.blog.pojo.dto.AdminLoginDTO;
 import com.hs.blog.pojo.entity.User;
 import com.hs.blog.result.Result;
-import io.swagger.annotations.Info;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
