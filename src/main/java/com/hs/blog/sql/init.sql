@@ -182,8 +182,11 @@ CREATE TABLE `book` (
   `download_count` int DEFAULT '0' COMMENT '下载次数',
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '上传时间',
   `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `category_id` int DEFAULT NULL COMMENT '分类ID',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `isbn` (`isbn`)
+  UNIQUE KEY `isbn` (`isbn`),
+  KEY `book_book_category_id_fk` (`category_id`),
+  CONSTRAINT `book_book_category_id_fk` FOREIGN KEY (`category_id`) REFERENCES `book_category` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='电子图书表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -312,4 +315,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-04-12 20:59:08
+-- Dump completed on 2025-04-14 13:59:04

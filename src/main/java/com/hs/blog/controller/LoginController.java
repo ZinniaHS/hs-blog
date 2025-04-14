@@ -1,5 +1,6 @@
 package com.hs.blog.controller;
 
+import com.hs.blog.pojo.dto.AdminLoginDTO;
 import com.hs.blog.pojo.entity.User;
 import com.hs.blog.result.Result;
 import io.swagger.annotations.Info;
@@ -14,9 +15,9 @@ public class LoginController {
 
     @PostMapping("/login")
     @CrossOrigin
-    public Result login(@RequestBody User user) {
-        System.out.println(user);
-        if (!Objects.equals("admin", user.getUsername()) || !Objects.equals("123456", user.getPassword())) {
+    public Result login(@RequestBody AdminLoginDTO adminLoginDTO) {
+        System.out.println(adminLoginDTO);
+        if (!Objects.equals("admin", adminLoginDTO.getUsername()) || !Objects.equals("123456", adminLoginDTO.getPassword())) {
             System.out.println("账号密码错误");
             return Result.error("账号密码错误");
         } else {

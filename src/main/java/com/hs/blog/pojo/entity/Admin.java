@@ -1,4 +1,5 @@
 package com.hs.blog.pojo.entity;
+
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -12,8 +13,8 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("user")
-public class User {
+@TableName("admin")
+public class Admin {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
@@ -22,15 +23,6 @@ public class User {
 
     @TableField("password")
     private String password;
-
-    @TableField("email")
-    private String email;
-
-    @TableField("avatar_url")
-    private String avatarUrl;
-
-    @TableField("phone")
-    private String phone;
 
     @TableField("create_time")
     private LocalDateTime createTime;

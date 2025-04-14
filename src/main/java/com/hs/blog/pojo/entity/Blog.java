@@ -1,4 +1,5 @@
 package com.hs.blog.pojo.entity;
+
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -12,25 +13,36 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("user")
-public class User {
+@TableName("blog")
+public class Blog {
     @TableId(type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
-    @TableField("username")
-    private String username;
+    @TableField("title")
+    private String title;
 
-    @TableField("password")
-    private String password;
+    @TableField("content")
+    private String content;
 
-    @TableField("email")
-    private String email;
+    @TableField("summary")
+    private String summary;
 
-    @TableField("avatar_url")
-    private String avatarUrl;
+    @TableField("author_id")
+    private Integer authorId;
 
-    @TableField("phone")
-    private String phone;
+    @TableField("category_id")
+    private Integer categoryId;
+
+    // 分为 草稿: 0
+    //    已发布: 1
+    @TableField("status")
+    private Integer status;
+
+    @TableField("view_count")
+    private Integer viewCount;
+
+    @TableField("like_count")
+    private Integer likeCount;
 
     @TableField("create_time")
     private LocalDateTime createTime;
