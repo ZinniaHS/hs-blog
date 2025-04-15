@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.hs.blog.HsBlogApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.632 s -- in com.hs.blog.HsBlogApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.621 s -- in com.hs.blog.HsBlogApplicationTests

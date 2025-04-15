@@ -15,7 +15,6 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true            # 开启驼峰命名转换
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 打印 SQL 日志
-#swagger 配置
 #swagger:
 #  enabled: true
 #  title: "API文档"

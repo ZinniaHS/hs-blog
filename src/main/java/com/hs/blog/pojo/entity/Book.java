@@ -43,6 +43,10 @@ public class Book {
     @TableField("category_id")
     private Integer categoryId;
 
+    // 0：下架，1：上架
+    @TableField("status")
+    private Integer status;
+
     @TableField("description")
     private String description;
 
