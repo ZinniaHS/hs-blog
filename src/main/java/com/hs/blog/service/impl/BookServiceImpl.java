@@ -22,12 +22,9 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements IB
      */
 
     public PageResult pageQuery(BookPageQueryDTO bookPageQueryDTO) {
-
-        int pageNum = bookPageQueryDTO.getPage();
+        int pageNum = bookPageQueryDTO.getPageNum();
         int pageSize = bookPageQueryDTO.getPageSize();
         Page<Book> pageBook = new Page<>(pageNum, pageSize);
-//        System.out.println("pageNum:"+pageNum);
-//        System.out.println("pageSize:"+pageSize);
         // 构建查询条件
         QueryWrapper<Book> wrapper = new QueryWrapper<>();
         // 模糊查询title,author,isbn
@@ -40,10 +37,10 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements IB
         if (bookPageQueryDTO.getIsbn() != null && !"".equals(bookPageQueryDTO.getIsbn())) {
             wrapper.like("isbn", bookPageQueryDTO.getIsbn());
         }
+        // 只查询上架的书籍
+        wrapper.eq("status", 1);
         // 执行查询
         Page<Book> page = this.page(pageBook, wrapper);
-        System.out.println("查询结果总数===========" + page.getTotal());
-        System.out.println("查询结果===========" + page.getRecords());
         return new PageResult(page.getTotal(), page.getRecords());
     }
 }

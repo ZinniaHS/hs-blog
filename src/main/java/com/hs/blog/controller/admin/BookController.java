@@ -31,6 +31,7 @@ public class BookController  {
      * 除了page，limit外，其余字段进行模糊查询
      * @return
      */
+    @CrossOrigin
     @GetMapping("/page")
     @Operation(summary = "分页查询书籍信息")
     public Result<PageResult> queryBookByPage(BookPageQueryDTO bookPageQueryDTO) {
@@ -38,4 +39,10 @@ public class BookController  {
         return Result.success(result);
     }
 
+    @PostMapping
+    @Operation(summary = "新增书籍信息")
+    public Result<Book> addBook(@RequestBody Book book) {
+        bookService.save(book);
+        return Result.success();
+    }
 }
