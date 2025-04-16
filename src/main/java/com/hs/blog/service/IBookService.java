@@ -15,4 +15,11 @@ public interface IBookService extends IService<Book> {
      * @return
      */
     PageResult pageQuery(BookPageQueryDTO bookPageQueryDTO);
+
+    /**
+     * 更新书籍状态
+     * @param status
+     * @param id
+     */
+    void updateBookStatus(Integer status, Long id);
 }

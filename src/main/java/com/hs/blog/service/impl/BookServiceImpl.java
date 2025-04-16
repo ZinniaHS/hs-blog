@@ -1,6 +1,7 @@
 package com.hs.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hs.blog.mapper.BookMapper;
@@ -20,7 +21,7 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements IB
      * 除了page，limit外，其余字段进行模糊查询
      * @return
      */
-
+    @Override
     public PageResult pageQuery(BookPageQueryDTO bookPageQueryDTO) {
         int pageNum = bookPageQueryDTO.getPageNum();
         int pageSize = bookPageQueryDTO.getPageSize();
@@ -37,10 +38,20 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements IB
         if (bookPageQueryDTO.getIsbn() != null && !"".equals(bookPageQueryDTO.getIsbn())) {
             wrapper.like("isbn", bookPageQueryDTO.getIsbn());
         }
-        // 只查询上架的书籍
-        wrapper.eq("status", 1);
         // 执行查询
         Page<Book> page = this.page(pageBook, wrapper);
         return new PageResult(page.getTotal(), page.getRecords());
+    }
+
+    /**
+     * 更新书籍状态
+     * @param status
+     * @param id
+     */
+    @Override
+    public void updateBookStatus(Integer status, Long id) {
+        UpdateWrapper<Book> wrapper = new UpdateWrapper<>();
+        wrapper.set("status", status == 1 ? 0 : 1).eq("id", id);
+        this.update(wrapper);
     }
 }

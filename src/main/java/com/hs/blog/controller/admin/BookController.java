@@ -39,6 +39,16 @@ public class BookController  {
         return Result.success(result);
     }
 
+    @CrossOrigin
+    @PostMapping("/status/{status}")
+    @Operation(summary = "更新书籍状态")
+    public Result updateBookStatus(@PathVariable("status") Integer status,
+                                   @RequestParam("id") Long id) {
+        System.out.println("status:"+status+" id:"+id);
+        bookService.updateBookStatus(status,id);
+        return Result.success();
+    }
+
     @PostMapping
     @Operation(summary = "新增书籍信息")
     public Result<Book> addBook(@RequestBody Book book) {
