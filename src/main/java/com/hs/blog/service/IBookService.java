@@ -3,6 +3,7 @@ package com.hs.blog.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hs.blog.pojo.dto.BookPageQueryDTO;
 import com.hs.blog.pojo.entity.Book;
+import com.hs.blog.pojo.vo.BookVO;
 import com.hs.blog.result.PageResult;
 import com.hs.blog.result.Result;
 
@@ -22,4 +23,11 @@ public interface IBookService extends IService<Book> {
      * @param id
      */
     void updateBookStatus(Integer status, Long id);
+
+    /**
+     * 根据id查询书籍信息
+     * @param id
+     * @return 返回BookVO对象
+     */
+    BookVO queryById(Integer id);
 }

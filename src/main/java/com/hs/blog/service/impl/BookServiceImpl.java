@@ -1,19 +1,29 @@
 package com.hs.blog.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hs.blog.constant.StatusConstant;
+import com.hs.blog.mapper.BookCategoryMapper;
 import com.hs.blog.mapper.BookMapper;
 import com.hs.blog.pojo.dto.BookPageQueryDTO;
 import com.hs.blog.pojo.entity.Book;
+import com.hs.blog.pojo.entity.BookCategory;
+import com.hs.blog.pojo.vo.BookVO;
 import com.hs.blog.result.PageResult;
 import com.hs.blog.result.Result;
 import com.hs.blog.service.IBookService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements IBookService {
+public class BookServiceImpl
+        extends ServiceImpl<BookMapper, Book> implements IBookService {
+
+    @Autowired
+    private BookCategoryMapper bookCategoryMapper;
 
     /**
      * 分页查询书籍
@@ -53,5 +63,23 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements IB
         UpdateWrapper<Book> wrapper = new UpdateWrapper<>();
         wrapper.set("status", status == 1 ? 0 : 1).eq("id", id);
         this.update(wrapper);
+    }
+
+    @Override
+    public BookVO queryById(Integer id) {
+        Book book = this.getById(id);
+        BookVO bookVO = new BookVO();
+        BeanUtil.copyProperties(book, bookVO);
+        // 分类与状态字段需要查询和填入
+        // 分类需要查询book_category表
+        BookCategory bookCategory =
+                bookCategoryMapper.selectById(book.getCategoryId());
+        bookVO.setCategory(bookCategory.getName());
+        System.out.println("bookCategory = "+bookCategory.getName());
+        // 状态需要填入statusConstant常量类
+        bookVO.setStatus(book.getStatus() == 1
+                ? StatusConstant.BOOK_STATUS_AVAILABLE
+                : StatusConstant.BOOK_STATUS_UNAVAILABLE);
+        return bookVO;
     }
 }
