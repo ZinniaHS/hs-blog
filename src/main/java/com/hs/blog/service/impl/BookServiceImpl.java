@@ -76,10 +76,22 @@ public class BookServiceImpl
                 bookCategoryMapper.selectById(book.getCategoryId());
         bookVO.setCategory(bookCategory.getName());
         System.out.println("bookCategory = "+bookCategory.getName());
+        // 设置bookCategory字段
+        bookVO.setBookCategory(bookCategoryMapper.selectById(bookCategory.getId()));
         // 状态需要填入statusConstant常量类
         bookVO.setStatus(book.getStatus() == 1
                 ? StatusConstant.BOOK_STATUS_AVAILABLE
                 : StatusConstant.BOOK_STATUS_UNAVAILABLE);
         return bookVO;
+    }
+
+    /**
+     * 更新书籍信息
+     * @param book
+     * @return
+     */
+    @Override
+    public void updateBook(Book book) {
+        this.updateById(book);
     }
 }

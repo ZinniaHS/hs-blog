@@ -11,5 +11,5 @@ public class BookCategoryVO implements Serializable {
     private Integer id;
     private String name;
     private Integer parentId;
-    private List<BookCategory> children; // 子分类集合
+    private List<BookCategoryVO> children; // 子分类集合
 }

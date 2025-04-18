@@ -62,4 +62,17 @@ public class BookController  {
         bookService.save(book);
         return Result.success();
     }
+
+    /**
+     * 更新书籍信息
+     * @param book
+     * @return
+     */
+    @PutMapping
+    @Operation(summary = "更新书籍信息")
+    public Result updateBook(@RequestBody Book book) {
+        System.out.println("book=========="+book);
+        bookService.updateBook(book);
+        return Result.success();
+    }
 }

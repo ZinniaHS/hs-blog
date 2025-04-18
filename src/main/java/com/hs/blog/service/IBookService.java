@@ -30,4 +30,11 @@ public interface IBookService extends IService<Book> {
      * @return 返回BookVO对象
      */
     BookVO queryById(Integer id);
+
+    /**
+     * 更新书籍信息
+     * @param book
+     * @return
+     */
+    void updateBook(Book book);
 }

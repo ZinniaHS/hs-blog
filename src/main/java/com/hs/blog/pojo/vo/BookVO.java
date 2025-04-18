@@ -3,6 +3,7 @@ package com.hs.blog.pojo.vo;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.hs.blog.pojo.entity.BookCategory;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,7 +31,8 @@ public class BookVO implements Serializable {
     private String coverUrl;
 
     private String filePath;
-
+    // 为了获得分类id以及其父分类id
+    private BookCategory bookCategory;
     // 分类名
     private String category;
     // 状态：上架、已下架，会引用StatusConstant
