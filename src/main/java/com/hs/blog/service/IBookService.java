@@ -37,4 +37,11 @@ public interface IBookService extends IService<Book> {
      * @return
      */
     void updateBook(Book book);
+
+    /**
+     * 新增书籍信息
+     * @param book
+     * @return
+     */
+    void saveBook(Book book);
 }

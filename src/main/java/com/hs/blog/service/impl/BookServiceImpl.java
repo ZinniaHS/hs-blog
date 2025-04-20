@@ -38,6 +38,8 @@ public class BookServiceImpl
         Page<Book> pageBook = new Page<>(pageNum, pageSize);
         // 构建查询条件
         QueryWrapper<Book> wrapper = new QueryWrapper<>();
+        // 根据创建时间降序排序
+        wrapper.orderByDesc("create_time");
         // 模糊查询title,author,isbn
         if (bookPageQueryDTO.getTitle() != null && !"".equals(bookPageQueryDTO.getTitle())) {
             wrapper.like("title", bookPageQueryDTO.getTitle());
@@ -93,5 +95,15 @@ public class BookServiceImpl
     @Override
     public void updateBook(Book book) {
         this.updateById(book);
+    }
+
+    /**
+     * 新增书籍信息
+     * @param book
+     * @return
+     */
+    @Override
+    public void saveBook(Book book) {
+        this.save(book);
     }
 }

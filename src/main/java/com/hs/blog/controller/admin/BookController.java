@@ -47,6 +47,12 @@ public class BookController  {
     }
 
 
+    /**
+     * 更新书籍状态
+     * @param status 当前书籍状态
+     * @param id 书籍id
+     * @return
+     */
     @PostMapping("/status/{status}")
     @Operation(summary = "更新书籍状态")
     public Result updateBookStatus(@PathVariable("status") Integer status,
@@ -56,10 +62,15 @@ public class BookController  {
         return Result.success();
     }
 
+    /**
+     * 新增书籍信息
+     * @param book
+     * @return
+     */
     @PostMapping
     @Operation(summary = "新增书籍信息")
-    public Result<Book> addBook(@RequestBody Book book) {
-        bookService.save(book);
+    public Result<Book> saveBook(@RequestBody Book book) {
+        bookService.saveBook(book);
         return Result.success();
     }
 
@@ -71,7 +82,6 @@ public class BookController  {
     @PutMapping
     @Operation(summary = "更新书籍信息")
     public Result updateBook(@RequestBody Book book) {
-        System.out.println("book=========="+book);
         bookService.updateBook(book);
         return Result.success();
     }
