@@ -18,14 +18,17 @@ public class BookPageQueryDTO implements Serializable {
     @Schema(description = "每页大小", example = "10", requiredMode = Schema.RequiredMode.REQUIRED)
     private int pageSize;
 
-    @Schema(description = "书名（模糊查询）", example = "Java")
-    private String title;
+//    @Schema(description = "书名（模糊查询）", example = "Java")
+//    private String title;
+//
+//    @Schema(description = "ISBN号（模糊查询）")
+//    private String isbn;
+//
+//    @Schema(description = "作者（模糊查询）")
+//    private String author;
 
-    @Schema(description = "ISBN号（模糊查询）")
-    private String isbn;
-
-    @Schema(description = "作者（模糊查询）")
-    private String author;
+    @Schema(description = "前端输入的关键词")
+    private String keyWord;
 
     @Schema(description = "图书状态 0下架，1上架")
     private int status;

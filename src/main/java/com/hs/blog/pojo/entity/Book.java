@@ -1,9 +1,6 @@
 package com.hs.blog.pojo.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -60,4 +57,7 @@ public class Book {
 
     @TableField("update_time")
     private LocalDateTime updateTime;
+
+    @TableLogic
+    private Integer isDeleted;
 }

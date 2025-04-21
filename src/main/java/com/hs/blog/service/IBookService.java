@@ -7,6 +7,8 @@ import com.hs.blog.pojo.vo.BookVO;
 import com.hs.blog.result.PageResult;
 import com.hs.blog.result.Result;
 
+import java.util.List;
+
 public interface IBookService extends IService<Book> {
 
     /**
@@ -44,4 +46,11 @@ public interface IBookService extends IService<Book> {
      * @return
      */
     void saveBook(Book book);
+
+    /**
+     * 批量删除书籍信息
+     * @param ids 多个选中的图书id
+     * @return
+     */
+    void batchDeleteBook(List<Integer> ids);
 }

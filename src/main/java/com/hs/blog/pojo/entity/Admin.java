@@ -1,9 +1,6 @@
 package com.hs.blog.pojo.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,4 +26,7 @@ public class Admin {
 
     @TableField("update_time")
     private LocalDateTime updateTime;
+
+    @TableLogic
+    private Integer isDeleted;
 }

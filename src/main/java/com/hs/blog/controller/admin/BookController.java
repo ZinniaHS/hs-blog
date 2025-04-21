@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin
 @Tag(name = "后台书籍管理接口",description = "书籍相关接口")
 @RestController
@@ -85,4 +87,17 @@ public class BookController  {
         bookService.updateBook(book);
         return Result.success();
     }
+
+    /**
+     * 批量删除书籍信息
+     * @param ids 多个选中的图书id
+     * @return
+     */
+    @DeleteMapping("/batchDelete")
+    @Operation(summary = "批量删除书籍信息")
+    public Result batchDeleteBook(@RequestParam("ids") List<Integer> ids) {
+        bookService.batchDeleteBook(ids);
+        return Result.success();
+    }
+
 }

@@ -18,6 +18,8 @@ import com.hs.blog.service.IBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class BookServiceImpl
         extends ServiceImpl<BookMapper, Book> implements IBookService {
@@ -41,14 +43,12 @@ public class BookServiceImpl
         // 根据创建时间降序排序
         wrapper.orderByDesc("create_time");
         // 模糊查询title,author,isbn
-        if (bookPageQueryDTO.getTitle() != null && !"".equals(bookPageQueryDTO.getTitle())) {
-            wrapper.like("title", bookPageQueryDTO.getTitle());
-        }
-        if (bookPageQueryDTO.getAuthor() != null && !"".equals(bookPageQueryDTO.getAuthor())) {
-            wrapper.like("author", bookPageQueryDTO.getAuthor());
-        }
-        if (bookPageQueryDTO.getIsbn() != null && !"".equals(bookPageQueryDTO.getIsbn())) {
-            wrapper.like("isbn", bookPageQueryDTO.getIsbn());
+        if (bookPageQueryDTO.getKeyWord() != null && !"".equals(bookPageQueryDTO.getKeyWord())) {
+            wrapper.like("title", bookPageQueryDTO.getKeyWord()).or()
+                    .like("author", bookPageQueryDTO.getKeyWord()).or()
+                    .like("isbn", bookPageQueryDTO.getKeyWord()).or()
+                    .like("description", bookPageQueryDTO.getKeyWord()).or()
+                    .like("publisher", bookPageQueryDTO.getKeyWord());
         }
         // 执行查询
         Page<Book> page = this.page(pageBook, wrapper);
@@ -105,5 +105,15 @@ public class BookServiceImpl
     @Override
     public void saveBook(Book book) {
         this.save(book);
+    }
+
+    /**
+     * 批量删除书籍信息
+     * @param ids 多个选中的图书id
+     * @return
+     */
+    @Override
+    public void batchDeleteBook(List<Integer> ids) {
+        this.removeBatchByIds(ids);
     }
 }
