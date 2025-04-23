@@ -1,4 +1,4 @@
-package com.hs.blog.controller.admin;
+package com.hs.blog.controller.user;
 
 import com.hs.blog.pojo.vo.BookCategoryVO;
 import com.hs.blog.result.Result;
@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @CrossOrigin
-@Tag(name = "后台书籍分类接口",description = "书籍分类接口")
-@RestController("adminBookCategoryController")
-@RequestMapping("/admin/bookCategory")
+@Tag(name = "客户端书籍分类接口",description = "书籍分类接口")
+@RestController("userBookCategoryController")
+@RequestMapping("/user/bookCategory")
 public class BookCategoryController {
 
     @Autowired
@@ -32,5 +32,4 @@ public class BookCategoryController {
         List<BookCategoryVO> list = bookCategoryService.getBookCategory();
         return Result.success(list);
     }
-
 }

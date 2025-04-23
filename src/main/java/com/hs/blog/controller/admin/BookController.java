@@ -16,7 +16,7 @@ import java.util.List;
 
 @CrossOrigin
 @Tag(name = "后台书籍管理接口",description = "书籍相关接口")
-@RestController
+@RestController("adminBookController")
 @RequestMapping("/admin/book")
 public class BookController  {
 
