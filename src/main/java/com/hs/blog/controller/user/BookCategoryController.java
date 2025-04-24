@@ -1,6 +1,8 @@
 package com.hs.blog.controller.user;
 
+import com.hs.blog.pojo.dto.SelectedCategoryBooksDTO;
 import com.hs.blog.pojo.vo.BookCategoryVO;
+import com.hs.blog.result.PageResult;
 import com.hs.blog.result.Result;
 import com.hs.blog.service.IBookCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,4 +34,6 @@ public class BookCategoryController {
         List<BookCategoryVO> list = bookCategoryService.getBookCategory();
         return Result.success(list);
     }
+
+
 }

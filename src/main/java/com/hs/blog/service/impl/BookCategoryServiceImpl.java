@@ -2,10 +2,14 @@ package com.hs.blog.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hs.blog.mapper.BookCategoryMapper;
+import com.hs.blog.pojo.dto.SelectedCategoryBooksDTO;
+import com.hs.blog.pojo.entity.Book;
 import com.hs.blog.pojo.entity.BookCategory;
 import com.hs.blog.pojo.vo.BookCategoryVO;
+import com.hs.blog.result.PageResult;
 import com.hs.blog.service.IBookCategoryService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +23,7 @@ import java.util.Map;
 @Service
 public class BookCategoryServiceImpl
         extends ServiceImpl<BookCategoryMapper, BookCategory> implements IBookCategoryService {
+
     @Autowired
     private BookCategoryMapper bookCategoryMapper;
 
@@ -30,6 +35,8 @@ public class BookCategoryServiceImpl
         // 转换并构建树形结构
         return buildCategoryTree(categoryList);
     }
+
+
 
     private List<BookCategoryVO> buildCategoryTree(List<BookCategory> categories) {
         // 创建VO列表并拷贝属性

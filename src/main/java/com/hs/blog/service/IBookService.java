@@ -2,6 +2,7 @@ package com.hs.blog.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hs.blog.pojo.dto.BookPageQueryDTO;
+import com.hs.blog.pojo.dto.SelectedCategoryBooksDTO;
 import com.hs.blog.pojo.entity.Book;
 import com.hs.blog.pojo.vo.BookVO;
 import com.hs.blog.result.PageResult;
@@ -53,4 +54,11 @@ public interface IBookService extends IService<Book> {
      * @return
      */
     void batchDeleteBook(List<Integer> ids);
+
+    /**
+     * 根据一级，二级分类id分页查询图书
+     * @return PageResult：总记录数和图书数据
+     */
+    PageResult getSelectedCategoryBooks(SelectedCategoryBooksDTO selectedCategoryBooksDTO);
+
 }

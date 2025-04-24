@@ -1,6 +1,7 @@
 package com.hs.blog.controller.user;
 
 import com.hs.blog.pojo.dto.BookPageQueryDTO;
+import com.hs.blog.pojo.dto.SelectedCategoryBooksDTO;
 import com.hs.blog.result.PageResult;
 import com.hs.blog.result.Result;
 import com.hs.blog.service.IBookService;
@@ -27,4 +28,16 @@ public class BookController {
         PageResult result = bookService.pageQuery(bookPageQueryDTO);
         return Result.success(result);
     }
+
+    /**
+     * 根据一级，二级分类id分页查询图书
+     * @return PageResult：总记录数和图书数据
+     */
+    @GetMapping("/selectedCategoryBooks")
+    @Operation(summary = "根据一级，二级分类id分页查询图书")
+    public Result<PageResult> getSelectedCategory(SelectedCategoryBooksDTO selectedCategoryBooksDTO) {
+        PageResult result = bookService.getSelectedCategoryBooks(selectedCategoryBooksDTO);
+        return Result.success(result);
+    }
+
 }
