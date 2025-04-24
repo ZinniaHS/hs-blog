@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hs.blog.mapper.BookCategoryMapper;
+import com.hs.blog.pojo.dto.BookCategoryPageQueryDTO;
 import com.hs.blog.pojo.dto.SelectedCategoryBooksDTO;
 import com.hs.blog.pojo.entity.Book;
 import com.hs.blog.pojo.entity.BookCategory;
@@ -35,8 +36,6 @@ public class BookCategoryServiceImpl
         // 转换并构建树形结构
         return buildCategoryTree(categoryList);
     }
-
-
 
     private List<BookCategoryVO> buildCategoryTree(List<BookCategory> categories) {
         // 创建VO列表并拷贝属性
@@ -73,5 +72,31 @@ public class BookCategoryServiceImpl
         });
 
         return rootNodes;
+    }
+
+    /**
+     * 分页查询图书类型信息
+     * @param bookCategoryPageQueryDTO
+     * @return
+     */
+    @Override
+    public PageResult pageQuery(BookCategoryPageQueryDTO bookCategoryPageQueryDTO) {
+        int pageNum = bookCategoryPageQueryDTO.getPageNum();
+        int pageSize = bookCategoryPageQueryDTO.getPageSize();
+        Page<BookCategory> pageBook = new Page<>(pageNum, pageSize);
+        // 构建查询条件
+        QueryWrapper<BookCategory> wrapper = new QueryWrapper<>();
+        // 根据创建时间降序排序
+        wrapper.orderByDesc("create_time");
+        // 模糊查询name
+        if (bookCategoryPageQueryDTO.getKeyWord() != null
+                && !"".equals(bookCategoryPageQueryDTO.getKeyWord())) {
+            wrapper.like("name", bookCategoryPageQueryDTO.getKeyWord());
+        }
+        // 执行查询
+        Page<BookCategory> page = this.page(pageBook, wrapper);
+        // 转换成VO类树形结构
+        List<BookCategoryVO> records = buildCategoryTree(page.getRecords());
+        return new PageResult(page.getTotal(), records);
     }
 }

@@ -1,6 +1,8 @@
 package com.hs.blog.controller.admin;
 
+import com.hs.blog.pojo.dto.BookCategoryPageQueryDTO;
 import com.hs.blog.pojo.vo.BookCategoryVO;
+import com.hs.blog.result.PageResult;
 import com.hs.blog.result.Result;
 import com.hs.blog.service.IBookCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,6 +33,18 @@ public class BookCategoryController {
     public Result<List<BookCategoryVO>> getBookCategory() {
         List<BookCategoryVO> list = bookCategoryService.getBookCategory();
         return Result.success(list);
+    }
+
+    /**
+     * 分页查询图书类型信息
+     * @param bookCategoryPageQueryDTO
+     * @return
+     */
+    @GetMapping("/page")
+    @Operation(summary = "分页查询图书类型信息")
+    public Result<PageResult> queryBookByPage(BookCategoryPageQueryDTO bookCategoryPageQueryDTO) {
+        PageResult result = bookCategoryService.pageQuery(bookCategoryPageQueryDTO);
+        return Result.success(result);
     }
 
 }
