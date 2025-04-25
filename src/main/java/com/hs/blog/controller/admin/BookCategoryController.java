@@ -1,6 +1,7 @@
 package com.hs.blog.controller.admin;
 
 import com.hs.blog.pojo.dto.BookCategoryPageQueryDTO;
+import com.hs.blog.pojo.dto.SaveBookCategoryDTO;
 import com.hs.blog.pojo.vo.BookCategoryVO;
 import com.hs.blog.result.PageResult;
 import com.hs.blog.result.Result;
@@ -8,10 +9,7 @@ import com.hs.blog.service.IBookCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -47,4 +45,28 @@ public class BookCategoryController {
         return Result.success(result);
     }
 
+    /**
+     * 新增图书类型
+     * @param saveBookCategoryDTO
+     * @return
+     */
+    @PostMapping
+    @Operation(summary = "新增图书类型")
+    public Result saveCategory(@RequestBody SaveBookCategoryDTO saveBookCategoryDTO) {
+        bookCategoryService.saveCategory(saveBookCategoryDTO);
+        return Result.success();
+    }
+
+    /**
+     * 删除书籍分类
+     * @param id，parentId
+     * @return
+     */
+    @DeleteMapping("/delete")
+    @Operation(summary = "删除书籍分类")
+    public Result deleteBookCategory(@RequestParam("id") Integer id,
+                                     @RequestParam(value = "parentId", required = false) Integer parentId) {
+        Result result =bookCategoryService.deleteBookCategory(id,parentId);
+        return result;
+    }
 }

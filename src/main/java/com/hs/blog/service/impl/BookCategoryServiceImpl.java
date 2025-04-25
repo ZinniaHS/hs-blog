@@ -1,16 +1,18 @@
 package com.hs.blog.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hs.blog.constant.MessageConstant;
 import com.hs.blog.mapper.BookCategoryMapper;
+import com.hs.blog.mapper.BookMapper;
 import com.hs.blog.pojo.dto.BookCategoryPageQueryDTO;
-import com.hs.blog.pojo.dto.SelectedCategoryBooksDTO;
+import com.hs.blog.pojo.dto.SaveBookCategoryDTO;
 import com.hs.blog.pojo.entity.Book;
 import com.hs.blog.pojo.entity.BookCategory;
 import com.hs.blog.pojo.vo.BookCategoryVO;
 import com.hs.blog.result.PageResult;
+import com.hs.blog.result.Result;
 import com.hs.blog.service.IBookCategoryService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,9 @@ public class BookCategoryServiceImpl
 
     @Autowired
     private BookCategoryMapper bookCategoryMapper;
+
+    @Autowired
+    private BookMapper bookMapper;
 
     @Override
     public List<BookCategoryVO> getBookCategory() {
@@ -98,5 +103,56 @@ public class BookCategoryServiceImpl
         // 转换成VO类树形结构
         List<BookCategoryVO> records = buildCategoryTree(page.getRecords());
         return new PageResult(page.getTotal(), records);
+    }
+
+    /**
+     * 新增图书类型
+     * @param saveBookCategoryDTO
+     * @return
+     */
+    @Override
+    public void saveCategory(SaveBookCategoryDTO saveBookCategoryDTO) {
+        BookCategory bookCategory = new BookCategory();
+        BeanUtils.copyProperties(saveBookCategoryDTO, bookCategory);
+        this.save(bookCategory);
+    }
+
+    /**
+     * 删除书籍分类
+     * @param id,parentId
+     * @return
+     */
+    @Override
+    public Result deleteBookCategory(Integer id, Integer parentId) {
+        // 首先判断要删除的是一级分类还是二级分类
+        if(parentId == null){
+            // 如果是一级分类，要删除需满足条件，该一级分类下没有二级分类
+            QueryWrapper<BookCategory> wrapper = new QueryWrapper<>();
+            wrapper.eq("parent_id", id);
+            if(bookCategoryMapper.selectCount(wrapper) == 0){
+                // 没有二级分类，可以删除
+                this.removeById(id);
+                System.out.println("一级分类下没有二级分类，可以删除");
+                return Result.success(MessageConstant.DELETE_BOOK_CATEGORY_SUCCESS);
+            }else{
+                // 有二级分类，不能删除
+                System.out.println("一级分类下有二级分类，不能删除");
+                return Result.error(MessageConstant.EXIST_SECOND_CATEGORY);
+            }
+        }else {
+            // 如果是二级分类，需要查询图书表，判断该二级分类下是否有书籍
+            QueryWrapper<Book> wrapper = new QueryWrapper<>();
+            wrapper.eq("category_id", id);
+            if(bookMapper.selectCount(wrapper) == 0){
+                // 没有书籍，可以删除
+                this.removeById(id);
+                return Result.success(MessageConstant.DELETE_BOOK_CATEGORY_SUCCESS);
+            }else {
+                // 有书籍，不能删除
+                return Result.error(MessageConstant.EXIST_BOOKS);
+            }
+        }
+
+
     }
 }

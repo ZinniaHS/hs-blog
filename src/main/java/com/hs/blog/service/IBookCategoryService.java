@@ -2,10 +2,11 @@ package com.hs.blog.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hs.blog.pojo.dto.BookCategoryPageQueryDTO;
-import com.hs.blog.pojo.dto.SelectedCategoryBooksDTO;
+import com.hs.blog.pojo.dto.SaveBookCategoryDTO;
 import com.hs.blog.pojo.entity.BookCategory;
 import com.hs.blog.pojo.vo.BookCategoryVO;
 import com.hs.blog.result.PageResult;
+import com.hs.blog.result.Result;
 
 import java.util.List;
 
@@ -27,4 +28,18 @@ public interface IBookCategoryService extends IService<BookCategory> {
      * @return
      */
     PageResult pageQuery(BookCategoryPageQueryDTO bookCategoryPageQueryDTO);
+
+    /**
+     * 新增图书类型
+     * @param saveBookCategoryDTO
+     * @return
+     */
+    void saveCategory(SaveBookCategoryDTO saveBookCategoryDTO);
+
+    /**
+     * 删除书籍分类
+     * @param id，parentId
+     * @return
+     */
+    Result deleteBookCategory(Integer id, Integer parentId);
 }

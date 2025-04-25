@@ -71,7 +71,7 @@ public class BookController  {
      */
     @PostMapping
     @Operation(summary = "新增书籍信息")
-    public Result<Book> saveBook(@RequestBody Book book) {
+    public Result saveBook(@RequestBody Book book) {
         bookService.saveBook(book);
         return Result.success();
     }
