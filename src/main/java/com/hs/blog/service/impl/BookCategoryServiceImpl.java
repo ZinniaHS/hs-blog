@@ -155,4 +155,11 @@ public class BookCategoryServiceImpl
 
 
     }
+
+    @Override
+    public Result editBookCategory(BookCategory bookCategory) {
+        // 更新分类名称
+        this.updateById(bookCategory);
+        return Result.success();
+    }
 }

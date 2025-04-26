@@ -42,4 +42,11 @@ public interface IBookCategoryService extends IService<BookCategory> {
      * @return
      */
     Result deleteBookCategory(Integer id, Integer parentId);
+
+    /**
+     * 更新书籍分类信息（名称）
+     * @param bookCategory
+     * @return
+     */
+    Result editBookCategory(BookCategory bookCategory);
 }

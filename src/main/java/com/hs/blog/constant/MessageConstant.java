@@ -12,6 +12,7 @@ public class MessageConstant {
     public static final String ACCOUNT_LOCKED = "账号被锁定";
     public static final String UNKNOWN_ERROR = "未知错误";
     public static final String USER_NOT_LOGIN = "用户未登录";
+    public static final String BOOK_COVER_UPLOAD_FAILED= "图书封面上传失败";
     public static final String EXIST_SECOND_CATEGORY = "该一级分类下有二级分类，不能删除";
     public static final String EXIST_BOOKS = "该二级分类下有书籍，不能删除";
     public static final String DELETE_BOOK_CATEGORY_SUCCESS = "图书分类删除成功！";

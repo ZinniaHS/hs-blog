@@ -2,6 +2,8 @@ package com.hs.blog.controller.admin;
 
 import com.hs.blog.pojo.dto.BookCategoryPageQueryDTO;
 import com.hs.blog.pojo.dto.SaveBookCategoryDTO;
+import com.hs.blog.pojo.entity.Book;
+import com.hs.blog.pojo.entity.BookCategory;
 import com.hs.blog.pojo.vo.BookCategoryVO;
 import com.hs.blog.result.PageResult;
 import com.hs.blog.result.Result;
@@ -68,5 +70,17 @@ public class BookCategoryController {
                                      @RequestParam(value = "parentId", required = false) Integer parentId) {
         Result result =bookCategoryService.deleteBookCategory(id,parentId);
         return result;
+    }
+
+    /**
+     * 更新书籍分类信息（名称）
+     * @param bookCategory
+     * @return
+     */
+    @PutMapping
+    @Operation(summary = "更新书籍分类信息（名称）")
+    public Result editBookCategory(@RequestBody BookCategory bookCategory) {
+        Result result = bookCategoryService.editBookCategory(bookCategory);
+        return Result.success(result);
     }
 }

@@ -20,12 +20,9 @@ mybatis-plus:
       logic-delete-field: isDeleted  # 逻辑删除字段名（需与实体类字段对应）
       logic-delete-value: 1          # 逻辑删除时该字段的值
       logic-not-delete-value: 0      # 未删除时该字段的值
-#swagger:
-#  enabled: true
-#  title: "API文档"
-#  group: "default"
-#knife4j:
-#  enable: true
-#  scan-package: com.hs.blog.controller
-#  setting:
-#    language: zh-CN
+aliyun:
+  oss:
+    endpoint: oss-cn-shenzhen.aliyuncs.com
+    access-key-id: LTAI5tFykkfeZfth3ByWbjx5
+    access-key-secret: zrRnPmpmCIhNqcmYMC0q5pL7YDZYab
+    bucket-name: hs-blog1
