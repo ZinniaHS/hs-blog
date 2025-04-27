@@ -132,10 +132,6 @@ public class BookServiceImpl
         Page<Book> pageBook = new Page<>(pageNum, pageSize);
         int firstId = selectedCategoryBooksDTO.getFirstId();
         int secondId = selectedCategoryBooksDTO.getSecondId();
-        System.out.println("======="+pageNum);
-        System.out.println("======="+pageSize);
-        System.out.println("======="+firstId);
-        System.out.println("======="+secondId);
         QueryWrapper<Book> wrapper = new QueryWrapper<>();
         if(secondId != 0){
             // 二级分类不为0，则查询二级分类下的图书
@@ -150,6 +146,36 @@ public class BookServiceImpl
                 wrapper.eq("category_id", category.getId()).or();
         }
         // 如果以上情况都不是，只剩下一级分类为0，则查询全部图书
+        Page<Book> page = this.page(pageBook, wrapper);
+        return new PageResult(page.getTotal(), page.getRecords());
+    }
+
+    /**
+     * 客户端分页查询书籍
+     * @param bookPageQueryDTO
+     * 大部分同管理端一致但要筛选已上架状态书籍
+     * @return
+     */
+    @Override
+    public PageResult pageQueryForUser(BookPageQueryDTO bookPageQueryDTO) {
+        int pageNum = bookPageQueryDTO.getPageNum();
+        int pageSize = bookPageQueryDTO.getPageSize();
+        Page<Book> pageBook = new Page<>(pageNum, pageSize);
+        // 构建查询条件
+        QueryWrapper<Book> wrapper = new QueryWrapper<>();
+        // 根据创建时间降序排序
+        wrapper.orderByDesc("create_time");
+        // 筛选上架书籍
+        wrapper.eq("status", 1);
+        // 模糊查询title,author,isbn
+        if (bookPageQueryDTO.getKeyWord() != null && !"".equals(bookPageQueryDTO.getKeyWord())) {
+            wrapper.like("title", bookPageQueryDTO.getKeyWord()).or()
+                    .like("author", bookPageQueryDTO.getKeyWord()).or()
+                    .like("isbn", bookPageQueryDTO.getKeyWord()).or()
+                    .like("description", bookPageQueryDTO.getKeyWord()).or()
+                    .like("publisher", bookPageQueryDTO.getKeyWord());
+        }
+        // 执行查询
         Page<Book> page = this.page(pageBook, wrapper);
         return new PageResult(page.getTotal(), page.getRecords());
     }

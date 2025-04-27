@@ -61,4 +61,11 @@ public interface IBookService extends IService<Book> {
      */
     PageResult getSelectedCategoryBooks(SelectedCategoryBooksDTO selectedCategoryBooksDTO);
 
+    /**
+     * 客户端分页查询书籍
+     * @param bookPageQueryDTO
+     * 大部分同管理端一致但要筛选已上架状态书籍
+     * @return
+     */
+    PageResult pageQueryForUser(BookPageQueryDTO bookPageQueryDTO);
 }
