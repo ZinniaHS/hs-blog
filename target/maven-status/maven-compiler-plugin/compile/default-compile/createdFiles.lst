@@ -11,6 +11,7 @@ com\hs\blog\result\Result.class
 com\hs\blog\constant\StatusConstant.class
 com\hs\blog\result\PageResult.class
 com\hs\blog\pojo\entity\BookCategory.class
+com\hs\blog\config\WebConfig.class
 com\hs\blog\pojo\dto\BookPageQueryDTO.class
 com\hs\blog\pojo\entity\BlogCategory.class
 com\hs\blog\pojo\vo\BookVO.class
@@ -23,6 +24,7 @@ com\hs\blog\pojo\dto\AdminLoginDTO.class
 com\hs\blog\controller\admin\BookCategoryController.class
 com\hs\blog\controller\admin\CommonController.class
 com\hs\blog\utils\JWTUtil.class
+com\hs\blog\config\CorsConfig.class
 com\hs\blog\pojo\entity\Tag.class
 com\hs\blog\pojo\vo\BookCategoryVO.class
 com\hs\blog\pojo\dto\PageDTO.class
@@ -34,4 +36,5 @@ com\hs\blog\pojo\entity\User.class
 com\hs\blog\pojo\entity\BlogComment.class
 com\hs\blog\utils\AliyunOSSUtil.class
 com\hs\blog\controller\LoginController.class
+com\hs\blog\Interceptor\JwtInterceptor.class
 com\hs\blog\constant\MessageConstant.class
