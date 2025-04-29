@@ -18,14 +18,17 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtInterceptor)
-                .addPathPatterns("/**")
-                .excludePathPatterns("/admin/login");   //排除登录接口的校验
+                .addPathPatterns("/user/addBookShelf") //添加客户端加入书架校验
+                .addPathPatterns("/admin/**")
+                .excludePathPatterns("/admin/login"); //排除登录接口的校验
+
     }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:5173")
+
                 .allowedMethods("GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);

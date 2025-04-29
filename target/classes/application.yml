@@ -8,6 +8,7 @@ spring:
     url: jdbc:mysql://localhost:3306/hs-blog?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
     username: root
     password: 123456
+
 # MyBatis-Plus 配置
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml  # XML 文件位置
@@ -26,3 +27,6 @@ aliyun:
     access-key-id: LTAI5tFykkfeZfth3ByWbjx5
     access-key-secret: zrRnPmpmCIhNqcmYMC0q5pL7YDZYab
     bucket-name: hs-blog1
+
+# Redis配置
+

@@ -1,7 +1,6 @@
-package com.hs.blog.controller;
+package com.hs.blog.controller.admin;
 
 import com.hs.blog.pojo.dto.AdminLoginDTO;
-import com.hs.blog.pojo.entity.User;
 import com.hs.blog.result.Result;
 import com.hs.blog.utils.JWTUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +10,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 //@CrossOrigin
-@RestController
+@RestController("adminLoginController")
 @Slf4j
 @RequestMapping("/admin/login")
 public class LoginController {
