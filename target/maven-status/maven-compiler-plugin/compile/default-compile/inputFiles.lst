@@ -1,5 +1,6 @@
 D:\myblog\hs-blog\src\main\java\com\hs\blog\config\CorsConfig.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\config\MyBatisPlusConfig.java
+D:\myblog\hs-blog\src\main\java\com\hs\blog\config\RedisConfig.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\config\WebConfig.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\constant\MessageConstant.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\constant\StatusConstant.java
@@ -9,11 +10,12 @@ D:\myblog\hs-blog\src\main\java\com\hs\blog\controller\admin\CommonController.ja
 D:\myblog\hs-blog\src\main\java\com\hs\blog\controller\admin\LoginController.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\controller\user\BookCategoryController.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\controller\user\BookController.java
-D:\myblog\hs-blog\src\main\java\com\hs\blog\controller\user\LoginController.java
+D:\myblog\hs-blog\src\main\java\com\hs\blog\controller\user\UserController.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\HsBlogApplication.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\Interceptor\JwtInterceptor.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\mapper\BookCategoryMapper.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\mapper\BookMapper.java
+D:\myblog\hs-blog\src\main\java\com\hs\blog\mapper\UserMapper.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\pojo\dto\AdminLoginDTO.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\pojo\dto\BookCategoryPageQueryDTO.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\pojo\dto\BookPageQueryDTO.java
@@ -38,5 +40,9 @@ D:\myblog\hs-blog\src\main\java\com\hs\blog\service\IBookCategoryService.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\service\IBookService.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\service\impl\BookCategoryServiceImpl.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\service\impl\BookServiceImpl.java
+D:\myblog\hs-blog\src\main\java\com\hs\blog\service\impl\UserServiceImpl.java
+D:\myblog\hs-blog\src\main\java\com\hs\blog\service\IUserService.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\utils\AliyunOSSUtil.java
+D:\myblog\hs-blog\src\main\java\com\hs\blog\utils\CaptchaUtil.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\utils\JWTUtil.java
+D:\myblog\hs-blog\src\main\java\com\hs\blog\utils\MailUtil.java

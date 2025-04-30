@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin
+
 @Tag(name = "客户端书籍接口",description = "书籍相关接口")
 @RestController("userBookController")
 @RequestMapping("/user/book")

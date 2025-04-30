@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@CrossOrigin
+
 @Tag(name = "客户端书籍分类接口",description = "书籍分类接口")
 @RestController("userBookCategoryController")
 @RequestMapping("/user/bookCategory")

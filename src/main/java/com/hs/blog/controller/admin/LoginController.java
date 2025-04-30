@@ -3,6 +3,7 @@ package com.hs.blog.controller.admin;
 import com.hs.blog.pojo.dto.AdminLoginDTO;
 import com.hs.blog.result.Result;
 import com.hs.blog.utils.JWTUtil;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,7 +11,8 @@ import java.util.HashMap;
 import java.util.Objects;
 
 //@CrossOrigin
-@RestController("adminLoginController")
+@Tag(name = "管理员登录接口",description = "管理员登录接口")
+@RestController
 @Slf4j
 @RequestMapping("/admin/login")
 public class LoginController {

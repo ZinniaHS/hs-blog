@@ -1,7 +1,11 @@
 package com.hs.blog.config;
 
 import com.hs.blog.Interceptor.JwtInterceptor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -14,6 +18,8 @@ public class WebConfig implements WebMvcConfigurer {
     public WebConfig(JwtInterceptor jwtInterceptor) {
         this.jwtInterceptor = jwtInterceptor;
     }
+
+
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -28,7 +34,6 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:5173")
-
                 .allowedMethods("GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);

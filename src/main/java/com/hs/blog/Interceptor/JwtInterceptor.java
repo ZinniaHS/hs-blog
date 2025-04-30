@@ -6,6 +6,7 @@ import com.hs.blog.utils.JWTUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -13,9 +14,15 @@ import org.springframework.web.servlet.HandlerInterceptor;
 public class JwtInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if(request.getMethod().equals("OPTIONS")){
-            return true;
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+            response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            response.setHeader("Access-Control-Allow-Headers", "*");
+            response.setHeader("Access-Control-Max-Age", "3600");
+            response.setStatus(HttpStatus.OK.value());
+            return false; // 直接放行
         }
+        System.out.println("==================拦截器执行了==================");
         String token = request.getHeader("Authorization");
         if (token == null || !token.startsWith("Bearer ")) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

@@ -6,8 +6,13 @@ package com.hs.blog.constant;
 public class MessageConstant {
     public static final String LOGIN_SUCCESS = "登录成功";
     public static final String LOGOUT_SUCCESS = "登出成功";
+    public static final String REGISTER_SUCCESS = "注册成功";
     public static final String PASSWORD_ERROR = "密码错误";
-    public static final String ALREADY_EXIST = "用户名已存在";
+    public static final String EMAIL_OK = "该邮箱可以注册！";
+    public static final String ALREADY_EXIST = "该邮箱已被注册！";
+    public static final String CAPTCHA_SENT = "验证码已发送";
+    public static final String CAPTCHA_SENT_FAIL = "验证码发送失败，请稍后再试";
+    public static final String CAPTCHA_ERROR = "验证码错误";
     public static final String ACCOUNT_NOT_FOUND = "账号不存在";
     public static final String ACCOUNT_LOCKED = "账号被锁定";
     public static final String UNKNOWN_ERROR = "未知错误";
