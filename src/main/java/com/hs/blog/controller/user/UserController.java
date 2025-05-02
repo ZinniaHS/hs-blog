@@ -53,7 +53,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/verifyEmail")
-    public Result verifyEmail(String email) {
+    public Result verifyEmail(@RequestParam("email") String email) {
         return userService.verifyEmail(email);
     }
 

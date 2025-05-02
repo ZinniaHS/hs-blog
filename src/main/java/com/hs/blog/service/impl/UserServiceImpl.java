@@ -1,5 +1,6 @@
 package com.hs.blog.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hs.blog.constant.MessageConstant;
@@ -93,7 +94,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 1.生成验证码
         // 2.将验证码存入redis
         // 3.发送带有验证码的邮件到指定注册邮箱
-        System.out.println("=====================发送验证码: "+email);
         // 生成6位数字验证码
         String captcha = CaptchaUtil.generateCaptcha();
         // 存入redis，key为邮箱，value为6位验证码，设置过期时间5分钟
@@ -103,7 +103,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         try {
             mailUtil.sendCaptchaEMail(email,captcha);
         }catch (Exception e){
-            System.out.println(e);
             return Result.error(MessageConstant.CAPTCHA_SENT_FAIL);
         }
         return Result.success(MessageConstant.CAPTCHA_SENT);
@@ -116,10 +115,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
      */
     @Override
     public Result verifyEmail(String email) {
-        System.out.println("=====================验证邮箱是否存在");
-        QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.eq("email",email);
-        if(this.getOne(wrapper) != null)
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(User::getEmail, email.trim());
+        User user = this.getOne(wrapper);
+        if (user != null)
             return Result.error(MessageConstant.ALREADY_EXIST);
         return Result.success(MessageConstant.EMAIL_OK);
     }

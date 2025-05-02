@@ -21,7 +21,8 @@ public class MailUtil {
         simpleMailMessage.setFrom(fromEmail);
         simpleMailMessage.setTo(email);
         simpleMailMessage.setSubject("欢迎使用hs-blog");
-        simpleMailMessage.setText("欢迎注册hs-blog,您的验证码为:" + content);
+        simpleMailMessage.setText("欢迎注册hs-blog，您的验证码为:" + content
+                                    + "，请在5分钟内完成验证。");
         mailSender.send(simpleMailMessage);
     }
 

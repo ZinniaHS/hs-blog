@@ -10,7 +10,7 @@ public class MessageConstant {
     public static final String PASSWORD_ERROR = "密码错误";
     public static final String EMAIL_OK = "该邮箱可以注册！";
     public static final String ALREADY_EXIST = "该邮箱已被注册！";
-    public static final String CAPTCHA_SENT = "验证码已发送";
+    public static final String CAPTCHA_SENT = "验证码已发送，请查看邮箱";
     public static final String CAPTCHA_SENT_FAIL = "验证码发送失败，请稍后再试";
     public static final String CAPTCHA_ERROR = "验证码错误";
     public static final String ACCOUNT_NOT_FOUND = "账号不存在";
