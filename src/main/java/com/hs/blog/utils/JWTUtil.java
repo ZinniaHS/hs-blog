@@ -1,15 +1,26 @@
 package com.hs.blog.utils;
 
+import com.hs.blog.constant.MessageConstant;
+import com.hs.blog.result.Result;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Component;
 
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+@Component
 public class JWTUtil {
+
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
 
     // 密钥，用于签名和验证JWT令牌
     private static final String secretKey = "hs-blog-very-long-secret-key-1234567890abcdef";
@@ -19,13 +30,12 @@ public class JWTUtil {
     private static final SecretKey key =
             Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 
-
     /**
      * 创建JWT令牌
      * @param claims map中key为"username", value为对应的值
      * @return 生成一个String类型的jwtToken
      */
-    public static String createJWT(Map<String, Object> claims) {
+    public String createJWT(Map<String, Object> claims) {
         /**
          * JWT由三个部分组成
          * 1. Header: 头部信息
@@ -49,7 +59,6 @@ public class JWTUtil {
         JwtBuilder builder = Jwts.builder();
         // 指定签名算法
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-        System.out.println(signatureAlgorithm.getValue());
         // header: JWT头部信息
         String jwtToken = builder.setHeaderParam("typ", "JWT")
                 .setHeaderParam("alg", signatureAlgorithm.getValue())
@@ -62,19 +71,46 @@ public class JWTUtil {
                 // signature: 签名算法signatureAlgorithm 和 密钥secretKey
                 .signWith(signatureAlgorithm, key)
                 .compact();
+        // 将生成的JWT令牌存入Redis，Key是jwt:token，Value是1（任意值），过期时间与JWT令牌相同
+        redisTemplate.opsForValue().set(jwtToken, "1",
+                            EXPIRATION_TIME, TimeUnit.MILLISECONDS);
         return jwtToken;
     }
 
     /**
-     * jwt令牌解密
-     * @param token 即为jwt令牌
-     * @return 返回解密的信息，包含过期时间等
+     * 验证JWT令牌
+     * @param token JWT令牌
+     * @return 解密后的Claims
+     * @throws JwtException 如果令牌无效或过期
      */
-    public static Claims parseJWT(String token){
-        return Jwts.parser()
+    public Claims validateJWT(String token) {
+        // 检查是否在Redis中
+        String redisKey = token;
+        Boolean exists = redisTemplate.hasKey(redisKey);
+        if (exists == null || !exists) {
+            throw new JwtException("Token is expired or invalid");
+        }
+
+        // 校验JWT本身的签名和过期时间
+        return Jwts.parserBuilder()
                 .setSigningKey(key)
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    /**
+     * 从Redis中移除JWT令牌
+     * @param token JWT令牌
+     */
+    public Result invalidateJWT(String token) {
+        try {
+            String redisKey = token;
+            redisTemplate.delete(redisKey);
+            return Result.success(MessageConstant.LOGOUT_SUCCESS);
+        }catch (Exception e){
+            return Result.error(MessageConstant.LOGOUT_ERROR);
+        }
     }
 
 }

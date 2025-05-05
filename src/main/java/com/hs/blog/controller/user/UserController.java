@@ -37,6 +37,16 @@ public class UserController {
     }
 
     /**
+     * 用户登出接口
+     * @param token
+     * @return
+     */
+    @PostMapping("/logout")
+    public Result logout(@RequestHeader("Authorization") String token) {
+        return userService.logout(token);
+    }
+
+    /**
      * 发送邮箱注册验证码
      * @param email
      * @return
@@ -56,6 +66,7 @@ public class UserController {
     public Result verifyEmail(@RequestParam("email") String email) {
         return userService.verifyEmail(email);
     }
+
 
 
 }

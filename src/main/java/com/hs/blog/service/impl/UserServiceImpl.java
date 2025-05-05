@@ -32,6 +32,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     @Autowired
     private MailUtil mailUtil;
     @Autowired
+    private JWTUtil jwtUtil;
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     /**
@@ -55,7 +57,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         HashMap<String, Object> claims = new HashMap<>();
         claims.put("username", user.getUsername());
         claims.put("password", password);
-        String token = JWTUtil.createJWT(claims);
+        String token = jwtUtil.createJWT(claims);
         return Result.success(token);
     }
 
@@ -121,6 +123,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         if (user != null)
             return Result.error(MessageConstant.ALREADY_EXIST);
         return Result.success(MessageConstant.EMAIL_OK);
+    }
+
+    /**
+     * 用户登出接口
+     * @param token
+     * @return
+     */
+    @Override
+    public Result logout(String token) {
+        if (token != null && token.startsWith("Bearer "))
+            token = token.replace("Bearer ", "");
+        return jwtUtil.invalidateJWT(token);
     }
 
 

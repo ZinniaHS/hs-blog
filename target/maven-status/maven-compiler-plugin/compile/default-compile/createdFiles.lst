@@ -2,14 +2,17 @@ com\hs\blog\HsBlogApplication.class
 com\hs\blog\service\impl\BookCategoryServiceImpl.class
 com\hs\blog\service\IUserService.class
 com\hs\blog\service\IBookCategoryService.class
+com\hs\blog\pojo\dto\UserRegisterDTO.class
 com\hs\blog\service\IBookService.class
 com\hs\blog\pojo\dto\BookCategoryPageQueryDTO.class
 com\hs\blog\result\Result.class
 com\hs\blog\constant\StatusConstant.class
+com\hs\blog\config\SecurityConfig.class
 com\hs\blog\result\PageResult.class
 com\hs\blog\pojo\entity\BookCategory.class
 com\hs\blog\pojo\dto\BookPageQueryDTO.class
 com\hs\blog\pojo\entity\BlogCategory.class
+com\hs\blog\filter\JwtAuthenticationFilter.class
 com\hs\blog\pojo\vo\BookVO.class
 com\hs\blog\service\impl\UserServiceImpl.class
 com\hs\blog\mapper\BookMapper.class
@@ -29,6 +32,7 @@ com\hs\blog\mapper\UserMapper.class
 com\hs\blog\pojo\entity\BlogComment.class
 com\hs\blog\utils\CaptchaUtil.class
 com\hs\blog\Interceptor\JwtInterceptor.class
+com\hs\blog\utils\MailUtil.class
 com\hs\blog\pojo\dto\SaveBookCategoryDTO.class
 com\hs\blog\pojo\entity\Admin.class
 com\hs\blog\service\impl\BookServiceImpl.class

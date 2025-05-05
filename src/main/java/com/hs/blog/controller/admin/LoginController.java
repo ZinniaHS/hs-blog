@@ -5,6 +5,7 @@ import com.hs.blog.result.Result;
 import com.hs.blog.utils.JWTUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -17,9 +18,12 @@ import java.util.Objects;
 @RequestMapping("/admin/login")
 public class LoginController {
 
+    @Autowired
+    private JWTUtil jwtUtil;
+
     @PostMapping
     public Result login(@RequestBody AdminLoginDTO adminLoginDTO) {
-        System.out.println(adminLoginDTO);
+//        System.out.println(adminLoginDTO);
         if (!Objects.equals("admin", adminLoginDTO.getUsername())
                 || !Objects.equals("123456", adminLoginDTO.getPassword())) {
             return Result.error("账号密码错误");
@@ -27,8 +31,8 @@ public class LoginController {
             HashMap<String, Object> claims = new HashMap<>();
             claims.put("username", adminLoginDTO.getUsername());
             claims.put("password", adminLoginDTO.getPassword());
-            String token = JWTUtil.createJWT(claims);
-            System.out.println("生成的token:  "+token);
+            String token = jwtUtil.createJWT(claims);
+//            System.out.println("生成的token:  "+token);
             return Result.success(token);
         }
     }

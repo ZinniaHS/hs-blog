@@ -6,12 +6,17 @@ import com.hs.blog.utils.JWTUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-@Component
+//@Component
 public class JwtInterceptor implements HandlerInterceptor {
+
+    @Autowired
+    private JWTUtil jwtUtil;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
@@ -35,7 +40,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         }
         token = token.replace("Bearer ", "");
         try {
-            Claims claims = JWTUtil.parseJWT(token);
+            Claims claims = jwtUtil.validateJWT(token);
             System.out.println(claims.get("username"));
             // claims = {password=123456,
             //           username=admin,

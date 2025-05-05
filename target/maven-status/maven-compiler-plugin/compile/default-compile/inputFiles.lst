@@ -1,6 +1,7 @@
 D:\myblog\hs-blog\src\main\java\com\hs\blog\config\CorsConfig.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\config\MyBatisPlusConfig.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\config\RedisConfig.java
+D:\myblog\hs-blog\src\main\java\com\hs\blog\config\SecurityConfig.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\config\WebConfig.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\constant\MessageConstant.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\constant\StatusConstant.java
@@ -11,6 +12,7 @@ D:\myblog\hs-blog\src\main\java\com\hs\blog\controller\admin\LoginController.jav
 D:\myblog\hs-blog\src\main\java\com\hs\blog\controller\user\BookCategoryController.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\controller\user\BookController.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\controller\user\UserController.java
+D:\myblog\hs-blog\src\main\java\com\hs\blog\filter\JwtAuthenticationFilter.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\HsBlogApplication.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\Interceptor\JwtInterceptor.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\mapper\BookCategoryMapper.java
@@ -23,6 +25,7 @@ D:\myblog\hs-blog\src\main\java\com\hs\blog\pojo\dto\PageDTO.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\pojo\dto\SaveBookCategoryDTO.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\pojo\dto\SelectedCategoryBooksDTO.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\pojo\dto\UserLoginDTO.java
+D:\myblog\hs-blog\src\main\java\com\hs\blog\pojo\dto\UserRegisterDTO.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\pojo\entity\Admin.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\pojo\entity\Blog.java
 D:\myblog\hs-blog\src\main\java\com\hs\blog\pojo\entity\BlogCategory.java

@@ -6,6 +6,7 @@ package com.hs.blog.constant;
 public class MessageConstant {
     public static final String LOGIN_SUCCESS = "登录成功";
     public static final String LOGOUT_SUCCESS = "登出成功";
+    public static final String LOGOUT_ERROR = "登出异常";
     public static final String REGISTER_SUCCESS = "注册成功";
     public static final String PASSWORD_ERROR = "密码错误";
     public static final String EMAIL_OK = "该邮箱可以注册！";

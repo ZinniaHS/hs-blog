@@ -35,4 +35,11 @@ public interface IUserService extends IService<User> {
      * @return
      */
     Result verifyEmail(String email);
+
+    /**
+     * 用户登出接口
+     * @param token
+     * @return
+     */
+    Result logout(String token);
 }
