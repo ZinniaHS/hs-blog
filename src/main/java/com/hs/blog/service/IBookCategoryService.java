@@ -10,10 +10,6 @@ import com.hs.blog.result.Result;
 
 import java.util.List;
 
-/**
- * 查询所有的图书分类
- * @return BookCategoryVO
- */
 public interface IBookCategoryService extends IService<BookCategory> {
 
     /**

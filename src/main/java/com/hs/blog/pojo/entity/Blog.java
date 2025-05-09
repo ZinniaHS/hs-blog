@@ -18,6 +18,9 @@ public class Blog {
     @TableField("title")
     private String title;
 
+    @TableField("sub_title")
+    private String subTitle;
+
     @TableField("content")
     private String content;
 
