@@ -55,8 +55,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             return Result.error(MessageConstant.PASSWORD_ERROR);
         // 生成token
         HashMap<String, Object> claims = new HashMap<>();
+        claims.put("userId", user.getId());
         claims.put("username", user.getUsername());
-        claims.put("password", password);
         String token = jwtUtil.createJWT(claims);
         return Result.success(token);
     }

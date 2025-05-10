@@ -34,7 +34,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 Claims claims = jwtUtil.validateJWT(token);
                 // 这里可以根据claims中的用户名创建Authentication对象
                 String username = (String) claims.get("username");
-                System.out.println("username: " + username );
+                String userId = (String) claims.get("userId");
+                System.out.println("username: " + username);
+                System.out.println("userId: " + userId);
                 // 设置默认权限（ROLE_USER），可以根据业务需求动态配置权限
                 List<GrantedAuthority> authorities =
                         List.of(new SimpleGrantedAuthority("ROLE_USER"));
@@ -42,6 +44,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 // 创建认证对象，可以自定义UserDetails
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(username, null, authorities);
+                // 将userId存入details
+                authentication.setDetails(userId);
                 // 设置到SecurityContext
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (Exception e) {

@@ -8,17 +8,22 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("blog_category")
-public class BlogCategory {
+public class BlogCategory implements Serializable {
+    private static final long serialVersionUID = 1L;
     @TableId(type = IdType.AUTO)
-    private Long id;
+    private Integer id;
 
     @TableField("name")
     private String name;
 
     @TableField("parent_id")
     private Integer parentId;
+
+
 }

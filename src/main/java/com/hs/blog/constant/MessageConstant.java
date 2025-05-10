@@ -21,5 +21,8 @@ public class MessageConstant {
     public static final String BOOK_COVER_UPLOAD_FAILED= "图书封面上传失败";
     public static final String EXIST_SECOND_CATEGORY = "该一级分类下有二级分类，不能删除";
     public static final String EXIST_BOOKS = "该二级分类下有书籍，不能删除";
+    public static final String EXIST_BLOGS = "该二级分类下有博客，不能删除";
     public static final String DELETE_BOOK_CATEGORY_SUCCESS = "图书分类删除成功！";
+    public static final String DELETE_BLOG_CATEGORY_SUCCESS = "博客分类删除成功！";
+
 }

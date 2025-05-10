@@ -24,11 +24,8 @@ public class Blog {
     @TableField("content")
     private String content;
 
-    @TableField("summary")
-    private String summary;
-
-    @TableField("author_id")
-    private Integer authorId;
+    @TableField("user_id")
+    private Integer userId;
 
     @TableField("category_id")
     private Integer categoryId;
@@ -38,11 +35,16 @@ public class Blog {
     @TableField("status")
     private Integer status;
 
+    // 分为 未锁定: 0
+    //       锁定: 1
+    @TableField("lock_status")
+    private Integer lockStatus;
+
     @TableField("view_count")
     private Integer viewCount;
 
-    @TableField("like_count")
-    private Integer likeCount;
+    @TableField("star_count")
+    private Integer starCount;
 
     @TableField("create_time")
     private LocalDateTime createTime;
