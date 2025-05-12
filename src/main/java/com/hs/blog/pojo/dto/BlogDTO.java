@@ -1,8 +1,12 @@
 package com.hs.blog.pojo.dto;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
+@Data
+@ApiModel(description = "博客保存对象")
 public class BlogDTO {
 
     @ApiModelProperty("标题")
@@ -13,9 +17,6 @@ public class BlogDTO {
 
     @ApiModelProperty("博客内容")
     private String content;
-
-    @ApiModelProperty("用户id")
-    private Integer userId;
 
     @ApiModelProperty("分类id")
     private Integer categoryId;

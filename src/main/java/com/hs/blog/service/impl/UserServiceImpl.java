@@ -98,6 +98,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 3.发送带有验证码的邮件到指定注册邮箱
         // 生成6位数字验证码
         String captcha = CaptchaUtil.generateCaptcha();
+        System.out.println(captcha);
         // 存入redis，key为邮箱，value为6位验证码，设置过期时间5分钟
         redisTemplate.opsForValue()
                 .set(email,captcha,5, TimeUnit.MINUTES);

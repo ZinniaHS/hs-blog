@@ -4,6 +4,7 @@ package com.hs.blog.constant;
  * 信息常量类
  */
 public class MessageConstant {
+    public static final String NOT_LOGIN = "未登录";
     public static final String LOGIN_SUCCESS = "登录成功";
     public static final String LOGOUT_SUCCESS = "登出成功";
     public static final String LOGOUT_ERROR = "登出异常";

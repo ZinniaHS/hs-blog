@@ -1,16 +1,13 @@
 package com.hs.blog.pojo.dto;
 
 import com.baomidou.mybatisplus.annotation.TableLogic;
-import io.swagger.annotations.ApiModelProperty;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.io.Serializable;
 
 @Data
-public class BookPageQueryDTO implements Serializable {
+public class BlogPageQueryDTO implements Serializable {
 
     @Schema(description = "当前页码", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
     private int pageNum;
@@ -21,9 +18,10 @@ public class BookPageQueryDTO implements Serializable {
     @Schema(description = "前端输入的关键词")
     private String keyWord;
 
-    @Schema(description = "图书状态 0下架，1上架")
+    @Schema(description = " 状态 0草稿，1已发布")
     private int status;
 
     @TableLogic
     private Integer isDeleted;  // 逻辑删除标记字段
+
 }
