@@ -1,17 +1,17 @@
 package com.hs.blog.pojo.vo;
 
-import com.baomidou.mybatisplus.annotation.TableField;
+import lombok.Builder;
 import lombok.Data;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-public class BlogPageQueryVO implements Serializable {
+public class BlogVO implements Serializable {
 
     private Long id;
     private String title;
     private String subTitle;
+    private String content;
     private String username;
     private String userAvatar;
     private String categoryName;

@@ -1,21 +1,26 @@
 package com.hs.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hs.blog.constant.MessageConstant;
 import com.hs.blog.context.CustomUserDetails;
+import com.hs.blog.mapper.BlogCategoryMapper;
 import com.hs.blog.mapper.BlogMapper;
+import com.hs.blog.mapper.BookCategoryMapper;
+import com.hs.blog.mapper.UserMapper;
 import com.hs.blog.pojo.dto.BlogDTO;
 import com.hs.blog.pojo.dto.BlogPageQueryDTO;
-import com.hs.blog.pojo.entity.Blog;
-import com.hs.blog.pojo.entity.Book;
+import com.hs.blog.pojo.entity.*;
 import com.hs.blog.pojo.vo.BlogPageQueryVO;
+import com.hs.blog.pojo.vo.BlogVO;
 import com.hs.blog.result.PageResult;
 import com.hs.blog.result.Result;
 import com.hs.blog.service.IBlogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -24,6 +29,13 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class BlogServiceImpl
         extends ServiceImpl<BlogMapper, Blog> implements IBlogService {
+
+    @Autowired
+    private BlogMapper blogMapper;
+    @Autowired
+    private BlogCategoryMapper blogCategoryMapper;
+    @Autowired
+    private UserMapper userMapper;
 
     /**
      * 新增博客
@@ -48,29 +60,38 @@ public class BlogServiceImpl
         return Result.success();
     }
 
+    /**
+     * 客户端分页查询博客信息
+     * @param blogPageQueryDTO
+     * @return
+     */
     @Override
     public PageResult pageQueryForUser(BlogPageQueryDTO blogPageQueryDTO) {
-        int pageNum = blogPageQueryDTO.getPageNum();
-        int pageSize = blogPageQueryDTO.getPageSize();
-        Page<Blog> pageBlog = new Page<>(pageNum, pageSize);
-        // 构建查询条件
-        QueryWrapper<Blog> wrapper = new QueryWrapper<>();
-        // 根据创建时间降序排序
-        wrapper.orderByDesc("create_time");
-        // 筛选已发布的博客
-        wrapper.eq("status", 1);
-        // 筛选未被锁定的博客
-        wrapper.eq("lock_status", 0);
-        // 根据关键字模糊查询title,subTitle,content字段
-        if (blogPageQueryDTO.getKeyWord() != null && !"".equals(blogPageQueryDTO.getKeyWord())) {
-            wrapper.like("title", blogPageQueryDTO.getKeyWord()).or()
-                    .like("sub_title", blogPageQueryDTO.getKeyWord()).or()
-                    .like("content", blogPageQueryDTO.getKeyWord());
-        }
-        // 执行查询
-        Page<Blog> page = this.page(pageBlog, wrapper);
-
+        Page<BlogPageQueryVO> page = new Page<>();
+        IPage<BlogPageQueryVO> res = blogMapper.pageQueryForUser(page, blogPageQueryDTO);
+        System.out.println(res.getRecords());
         return new PageResult(page.getTotal(), page.getRecords());
+    }
+
+    /**
+     * 根据id查询博客信息
+     * @param id
+     * @return
+     */
+    @Override
+    public BlogVO queryById(Integer id) {
+        BlogVO blogVO = new BlogVO();
+        QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", id);
+        Blog blog = blogMapper.selectOne(queryWrapper);
+        BeanUtils.copyProperties(blog, blogVO);
+        User user = userMapper.selectById(blog.getUserId());
+        blogVO.setUserAvatar(user.getAvatarUrl());
+        blogVO.setUsername(user.getUsername());
+        BlogCategory blogCategory = blogCategoryMapper.selectById(blog.getCategoryId());
+        blogVO.setCategoryName(blogCategory.getName());
+        System.out.println(blogVO);
+        return blogVO;
     }
 
 }

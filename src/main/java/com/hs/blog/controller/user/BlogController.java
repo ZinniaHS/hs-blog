@@ -3,6 +3,8 @@ package com.hs.blog.controller.user;
 import com.hs.blog.pojo.dto.BlogDTO;
 import com.hs.blog.pojo.dto.BlogPageQueryDTO;
 import com.hs.blog.pojo.dto.BookPageQueryDTO;
+import com.hs.blog.pojo.vo.BlogVO;
+import com.hs.blog.pojo.vo.BookVO;
 import com.hs.blog.result.PageResult;
 import com.hs.blog.result.Result;
 import com.hs.blog.service.IBlogService;
@@ -40,6 +42,18 @@ public class BlogController {
     public Result<PageResult> queryBookByPage(BlogPageQueryDTO blogPageQueryDTO) {
         PageResult result = blogService.pageQueryForUser(blogPageQueryDTO);
         return Result.success(result);
+    }
+
+    /**
+     * 根据id查询博客信息
+     * @param id
+     * @return
+     */
+    @GetMapping("{id}")
+    @Operation(summary = "根据id查询博客信息")
+    public Result<BlogVO> queryBlogById(@PathVariable("id") Integer id) {
+        BlogVO blogVO = blogService.queryById(id);
+        return Result.success(blogVO);
     }
 
 }

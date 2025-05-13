@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hs.blog.mapper.BlogMapper">
+
+    <resultMap id="BlogPageQueryVOMap" type="com.hs.blog.pojo.vo.BlogPageQueryVO">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="sub_title" property="subTitle"/>
+        <result column="username" property="username"/>
+        <result column="avatar_url" property="userAvatar"/>
+        <result column="categoryName" property="categoryName"/>
+        <result column="viewCount" property="viewCount"/>
+        <result column="likeCount" property="likeCount"/>
+        <result column="starCount" property="starCount"/>
+        <result column="createTime" property="createTime"/>
+        <result column="updateTime" property="updateTime"/>
+    </resultMap>
+
+    <select id="pageQueryForUser" resultMap="BlogPageQueryVOMap">
+        SELECT
+        b.id,
+        b.title,
+        b.sub_title,
+        u.username,
+        u.avatar_url,
+        bc.name AS categoryName,
+        b.view_count AS viewCount,
+        b.like_count AS likeCount,
+        b.star_count AS starCount,
+        b.create_time AS createTime,
+        b.update_time AS updateTime
+        FROM blog b
+        LEFT JOIN user u ON b.user_id = u.id AND u.is_deleted = 0
+        LEFT JOIN blog_category bc ON b.category_id = bc.id
+        <where>
+            <if test="blogPageQueryDTO.keyWord != null
+                        and blogPageQueryDTO.keyWord.trim() != ''">
+                AND (b.title LIKE CONCAT('%', #{keyWord}, '%')
+                OR b.sub_title LIKE CONCAT('%', #{keyWord}, '%')
+                OR b.content LIKE CONCAT('%', #{keyWord}, '%'))
+            </if>
+            AND b.status = 1
+            AND b.lock_status = 0
+            AND b.is_deleted = 0
+        </where>
+        ORDER BY b.create_time DESC
+    </select>
+
+</mapper>

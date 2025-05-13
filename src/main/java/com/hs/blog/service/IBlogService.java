@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.hs.blog.pojo.dto.BlogDTO;
 import com.hs.blog.pojo.dto.BlogPageQueryDTO;
 import com.hs.blog.pojo.entity.Blog;
+import com.hs.blog.pojo.vo.BlogVO;
 import com.hs.blog.result.PageResult;
 import com.hs.blog.result.Result;
 
@@ -22,4 +23,11 @@ public interface IBlogService extends IService<Blog> {
      * @return
      */
     PageResult pageQueryForUser(BlogPageQueryDTO blogPageQueryDTO);
+
+    /**
+     * 根据id查询博客信息
+     * @param id
+     * @return
+     */
+    BlogVO queryById(Integer id);
 }
