@@ -26,6 +26,9 @@ public class User {
     @TableField("avatar_url")
     private String avatarUrl;
 
+    @TableField("description")
+    private String description;
+
     @TableField("phone")
     private String phone;
 

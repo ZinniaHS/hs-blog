@@ -12,6 +12,7 @@ public class BlogPageQueryVO implements Serializable {
     private Long id;
     private String title;
     private String subTitle;
+    private String userId;
     private String username;
     private String userAvatar;
     private String categoryName;

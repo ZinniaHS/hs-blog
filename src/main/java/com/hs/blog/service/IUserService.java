@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.hs.blog.pojo.dto.UserLoginDTO;
 import com.hs.blog.pojo.dto.UserRegisterDTO;
 import com.hs.blog.pojo.entity.User;
+import com.hs.blog.pojo.vo.UserInfoVO;
 import com.hs.blog.result.Result;
 
 public interface IUserService extends IService<User> {
@@ -42,4 +43,22 @@ public interface IUserService extends IService<User> {
      * @return
      */
     Result logout(String token);
+
+    /**
+     * 验证是否是自己的页面
+     * @param id 为-1时，代表是自己的页面，其他的需要判断
+     * @return 返回状态码来判断
+     *         如果code是1，则是自己的页面，data是用户id
+     *         如果code是0，则不是自己的页面，msg是用户id
+     */
+    Result verifyIfIsMyself(Integer id);
+
+    /**
+     * 获取用户信息
+     * @param id
+     * @return 返回状态码来判断
+     *         如果code是1，则是自己的页面，data是用户id
+     *         如果code是0，则不是自己的页面，msg是用户id
+     */
+    Result<UserInfoVO> getUserInfoById(Integer id);
 }

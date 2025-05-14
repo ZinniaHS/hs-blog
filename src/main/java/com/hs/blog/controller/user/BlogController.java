@@ -13,6 +13,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "客户端博客接口",description = "博客接口")
 @RestController("userBlogController")
 @RequestMapping("/user/blog")
@@ -39,7 +41,7 @@ public class BlogController {
      */
     @GetMapping("/page")
     @Operation(summary = "客户端分页查询博客信息")
-    public Result<PageResult> queryBookByPage(BlogPageQueryDTO blogPageQueryDTO) {
+    public Result<PageResult> queryBlogByPage(BlogPageQueryDTO blogPageQueryDTO) {
         PageResult result = blogService.pageQueryForUser(blogPageQueryDTO);
         return Result.success(result);
     }
@@ -54,6 +56,19 @@ public class BlogController {
     public Result<BlogVO> queryBlogById(@PathVariable("id") Integer id) {
         BlogVO blogVO = blogService.queryById(id);
         return Result.success(blogVO);
+    }
+
+    /**
+     * 根据用户id分页查询他的所有博客
+     * @param userId
+     * @return
+     */
+    @GetMapping("/queryAllBlogsByUserId/{userId}")
+    @Operation(summary = "根据用户id分页查询他的所有博客")
+    public Result<PageResult> queryAllBlogsByUserId(@PathVariable("userId") Integer userId) {
+        PageResult res = blogService.queryAllBlogsByUserId(userId);
+        System.out.println("==========="+userId);
+        return Result.success(res);
     }
 
 }

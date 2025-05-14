@@ -6,6 +6,7 @@
         <id column="id" property="id"/>
         <result column="title" property="title"/>
         <result column="sub_title" property="subTitle"/>
+        <result column="id" property="userId"/>
         <result column="username" property="username"/>
         <result column="avatar_url" property="userAvatar"/>
         <result column="categoryName" property="categoryName"/>
@@ -21,6 +22,7 @@
         b.id,
         b.title,
         b.sub_title,
+        u.id,
         u.username,
         u.avatar_url,
         bc.name AS categoryName,
@@ -41,6 +43,31 @@
             </if>
             AND b.status = 1
             AND b.lock_status = 0
+            AND b.is_deleted = 0
+        </where>
+        ORDER BY b.create_time DESC
+    </select>
+
+    <select id="queryAllBlogsByUserId" resultMap="BlogPageQueryVOMap">
+        SELECT
+        b.id,
+        b.title,
+        b.sub_title,
+        u.id,
+        u.username,
+        u.avatar_url,
+        bc.name AS categoryName,
+        b.view_count AS viewCount,
+        b.like_count AS likeCount,
+        b.star_count AS starCount,
+        b.create_time AS createTime,
+        b.update_time AS updateTime
+        FROM blog b
+        LEFT JOIN user u ON b.user_id = u.id AND u.is_deleted = 0
+        LEFT JOIN blog_category bc ON b.category_id = bc.id
+        <where>
+            AND u.id = #{userId}
+            AND b.status = 1
             AND b.is_deleted = 0
         </where>
         ORDER BY b.create_time DESC

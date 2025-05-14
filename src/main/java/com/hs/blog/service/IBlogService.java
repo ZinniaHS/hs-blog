@@ -8,6 +8,8 @@ import com.hs.blog.pojo.vo.BlogVO;
 import com.hs.blog.result.PageResult;
 import com.hs.blog.result.Result;
 
+import java.util.List;
+
 public interface IBlogService extends IService<Blog> {
 
     /**
@@ -30,4 +32,11 @@ public interface IBlogService extends IService<Blog> {
      * @return
      */
     BlogVO queryById(Integer id);
+
+    /**
+     * 根据用户id分页查询他的所有博客
+     * @param userId
+     * @return
+     */
+    PageResult queryAllBlogsByUserId(Integer userId);
 }

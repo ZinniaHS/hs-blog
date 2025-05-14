@@ -25,6 +25,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 public class BlogServiceImpl
@@ -92,6 +94,18 @@ public class BlogServiceImpl
         blogVO.setCategoryName(blogCategory.getName());
         System.out.println(blogVO);
         return blogVO;
+    }
+
+    /**
+     * 根据用户id分页查询他的所有博客
+     * @param userId
+     * @return
+     */
+    @Override
+    public PageResult queryAllBlogsByUserId(Integer userId) {
+        Page<BlogPageQueryVO> page = new Page<>();
+        IPage<BlogPageQueryVO> res = blogMapper.queryAllBlogsByUserId(page, userId);
+        return new PageResult(page.getTotal(), page.getRecords());
     }
 
 }

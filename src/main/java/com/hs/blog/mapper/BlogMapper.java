@@ -17,4 +17,11 @@ public interface BlogMapper extends BaseMapper<Blog> {
      * @return
      */
     IPage<BlogPageQueryVO> pageQueryForUser(Page<BlogPageQueryVO> page, BlogPageQueryDTO blogPageQueryDTO);
+
+    /**
+     * 根据用户id分页查询他的所有博客
+     * @param userId
+     * @return
+     */
+    IPage<BlogPageQueryVO> queryAllBlogsByUserId(Page<BlogPageQueryVO> page, Integer userId);
 }

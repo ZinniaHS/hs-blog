@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hs.blog.constant.MessageConstant;
+import com.hs.blog.context.CustomUserDetails;
 import com.hs.blog.mapper.UserMapper;
 import com.hs.blog.pojo.dto.UserLoginDTO;
 import com.hs.blog.pojo.dto.UserRegisterDTO;
 import com.hs.blog.pojo.entity.User;
+import com.hs.blog.pojo.vo.UserInfoVO;
 import com.hs.blog.result.Result;
 import com.hs.blog.service.IUserService;
 import com.hs.blog.utils.CaptchaUtil;
@@ -16,6 +18,8 @@ import com.hs.blog.utils.MailUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -136,6 +140,59 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         if (token != null && token.startsWith("Bearer "))
             token = token.replace("Bearer ", "");
         return jwtUtil.invalidateJWT(token);
+    }
+
+    /**
+     * 验证是否是自己的页面
+     * @param id 为-1时，代表是自己的页面，其他的需要判断
+     * @return 返回状态码来判断
+     *         如果code是1，则是自己的页面，data是用户id
+     *         如果code是0，则不是自己的页面，msg是用户id
+     */
+    @Override
+    public Result verifyIfIsMyself(Integer id) {
+        String userId = null;
+        // 获取当前登录用户信息
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof CustomUserDetails) {
+            userId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
+        }
+        // 如果id为-1，则代表是自己的页面
+        if(id == -1)
+            return Result.success(userId);
+        // 除此之外就是别人的页面，返回用户id
+        return Result.error(String.valueOf(id));
+    }
+
+    /**
+     * 获取用户信息
+     * @param id
+     * @return 返回状态码来判断
+     *         如果code是1，则是自己的页面，data是用户id
+     *         如果code是0，则不是自己的页面，msg是用户id
+     */
+    @Override
+    public Result<UserInfoVO> getUserInfoById(Integer id) {
+        String userId = null;
+        // 获取当前登录用户信息
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof CustomUserDetails) {
+            userId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
+        }
+        UserInfoVO userInfoVO = new UserInfoVO();
+        // 如果id为-1，则代表是自己的页面
+        if(id == -1){
+            User user = this.getById(userId);
+            BeanUtils.copyProperties(user,userInfoVO);
+            userInfoVO.setMyPage(true);
+            return Result.success(userInfoVO);
+        }else{
+            // 除此之外就是别人的页面，返回用户id
+            User user = this.getById(String.valueOf(id));
+            BeanUtils.copyProperties(user,userInfoVO);
+            userInfoVO.setMyPage(false);
+            return Result.success(userInfoVO);
+        }
     }
 
 
