@@ -15,5 +15,11 @@ public class UserInfoVO implements Serializable {
     private String description;
     private String phone;
     private boolean isMyPage;
+    private Integer totalBlogs;
+    private Integer totalViews;
+    private Integer totalLikes;
+    private Integer totalStars;
+    private Integer totalComments;
+    private Integer totalFollowers;
 
 }

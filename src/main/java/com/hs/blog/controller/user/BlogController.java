@@ -2,6 +2,7 @@ package com.hs.blog.controller.user;
 
 import com.hs.blog.pojo.dto.BlogDTO;
 import com.hs.blog.pojo.dto.BlogPageQueryDTO;
+import com.hs.blog.pojo.dto.BlogPageQueryForOneDTO;
 import com.hs.blog.pojo.dto.BookPageQueryDTO;
 import com.hs.blog.pojo.vo.BlogVO;
 import com.hs.blog.pojo.vo.BookVO;
@@ -60,14 +61,14 @@ public class BlogController {
 
     /**
      * 根据用户id分页查询他的所有博客
-     * @param userId
+     * @param blogPageQueryForOneDTO
      * @return
      */
-    @GetMapping("/queryAllBlogsByUserId/{userId}")
+    @GetMapping("/queryAllBlogsByUserId")
     @Operation(summary = "根据用户id分页查询他的所有博客")
-    public Result<PageResult> queryAllBlogsByUserId(@PathVariable("userId") Integer userId) {
-        PageResult res = blogService.queryAllBlogsByUserId(userId);
-        System.out.println("==========="+userId);
+    public Result<PageResult> queryAllBlogsByUserId(BlogPageQueryForOneDTO blogPageQueryForOneDTO) {
+        PageResult res = blogService.queryAllBlogsByUserId(blogPageQueryForOneDTO);
+        System.out.println("==========="+blogPageQueryForOneDTO);
         return Result.success(res);
     }
 

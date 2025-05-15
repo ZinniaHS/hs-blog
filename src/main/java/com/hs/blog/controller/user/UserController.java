@@ -87,7 +87,7 @@ public class UserController {
      *         如果code是0，则不是自己的页面，msg是用户id
      */
     @GetMapping("/getUserInfoById")
-    public Result getUserInfoById(@RequestParam("id") Integer id) {
+    public Result<UserInfoVO> getUserInfoById(@RequestParam("id") Integer id) {
         return userService.getUserInfoById(id);
     }
 

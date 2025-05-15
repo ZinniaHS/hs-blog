@@ -3,6 +3,7 @@ package com.hs.blog.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hs.blog.pojo.dto.BlogDTO;
 import com.hs.blog.pojo.dto.BlogPageQueryDTO;
+import com.hs.blog.pojo.dto.BlogPageQueryForOneDTO;
 import com.hs.blog.pojo.entity.Blog;
 import com.hs.blog.pojo.vo.BlogVO;
 import com.hs.blog.result.PageResult;
@@ -35,8 +36,8 @@ public interface IBlogService extends IService<Blog> {
 
     /**
      * 根据用户id分页查询他的所有博客
-     * @param userId
+     * @param blogPageQueryForOneDTO
      * @return
      */
-    PageResult queryAllBlogsByUserId(Integer userId);
+    PageResult queryAllBlogsByUserId(BlogPageQueryForOneDTO blogPageQueryForOneDTO);
 }

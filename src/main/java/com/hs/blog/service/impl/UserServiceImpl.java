@@ -5,9 +5,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hs.blog.constant.MessageConstant;
 import com.hs.blog.context.CustomUserDetails;
+import com.hs.blog.mapper.BlogMapper;
 import com.hs.blog.mapper.UserMapper;
 import com.hs.blog.pojo.dto.UserLoginDTO;
 import com.hs.blog.pojo.dto.UserRegisterDTO;
+import com.hs.blog.pojo.entity.Blog;
+import com.hs.blog.pojo.entity.BlogCategory;
 import com.hs.blog.pojo.entity.User;
 import com.hs.blog.pojo.vo.UserInfoVO;
 import com.hs.blog.result.Result;
@@ -39,6 +42,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     private JWTUtil jwtUtil;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserMapper userMapper;
+    @Autowired
+    private BlogMapper blogMapper;
 
     /**
      * 用户登录接口
@@ -179,21 +186,44 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         if (authentication.getPrincipal() instanceof CustomUserDetails) {
             userId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
         }
-        UserInfoVO userInfoVO = new UserInfoVO();
+        UserInfoVO userInfoVO;
         // 如果id为-1，则代表是自己的页面
         if(id == -1){
-            User user = this.getById(userId);
-            BeanUtils.copyProperties(user,userInfoVO);
+            userInfoVO = userMapper.getUserInfoById(Integer.valueOf(userId));
             userInfoVO.setMyPage(true);
-            return Result.success(userInfoVO);
         }else{
             // 除此之外就是别人的页面，返回用户id
-            User user = this.getById(String.valueOf(id));
-            BeanUtils.copyProperties(user,userInfoVO);
+            userInfoVO = userMapper.getUserInfoById(Integer.valueOf(id));
             userInfoVO.setMyPage(false);
-            return Result.success(userInfoVO);
         }
+        System.out.println("==================="+userInfoVO);
+        return Result.success(userInfoVO);
+//        // 查询用户博客数量
+//        userInfoVO.setTotalBlogs(Math
+//                .toIntExact(
+//                blogMapper.selectCount(
+//                new QueryWrapper<Blog>()
+//                .eq("user_id", userInfoVO.getId()))));
+//        // 查询总浏览数
+//        userInfoVO.setTotalViews((int) blogMapper.selectList(
+//                        new QueryWrapper<Blog>()
+//                                .eq("user_id", userInfoVO.getId()))
+//                .stream()
+//                .mapToLong(Blog::getViewCount)
+//                .sum());
+//        // 查询总点赞数
+//        userInfoVO.setTotalLikes((int) blogMapper.selectList(
+//                new QueryWrapper<Blog>()
+//                .eq("user_id", userInfoVO.getId()))
+//                .stream()
+//                .mapToLong(Blog::getLikeCount)
+//                .sum());
+//        // 查询总收藏数
+//        userInfoVO.setTotalStars((int) blogMapper.selectList(
+//                        new QueryWrapper<Blog>()
+//                                .eq("user_id", userInfoVO.getId()))
+//                .stream()
+//                .mapToLong(Blog::getStarCount)
+//                .sum());
     }
-
-
 }

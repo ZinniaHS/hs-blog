@@ -12,6 +12,7 @@ import com.hs.blog.mapper.BookCategoryMapper;
 import com.hs.blog.mapper.UserMapper;
 import com.hs.blog.pojo.dto.BlogDTO;
 import com.hs.blog.pojo.dto.BlogPageQueryDTO;
+import com.hs.blog.pojo.dto.BlogPageQueryForOneDTO;
 import com.hs.blog.pojo.entity.*;
 import com.hs.blog.pojo.vo.BlogPageQueryVO;
 import com.hs.blog.pojo.vo.BlogVO;
@@ -98,13 +99,13 @@ public class BlogServiceImpl
 
     /**
      * 根据用户id分页查询他的所有博客
-     * @param userId
+     * @param blogPageQueryForOneDTO
      * @return
      */
     @Override
-    public PageResult queryAllBlogsByUserId(Integer userId) {
+    public PageResult queryAllBlogsByUserId(BlogPageQueryForOneDTO blogPageQueryForOneDTO) {
         Page<BlogPageQueryVO> page = new Page<>();
-        IPage<BlogPageQueryVO> res = blogMapper.queryAllBlogsByUserId(page, userId);
+        IPage<BlogPageQueryVO> res = blogMapper.queryAllBlogsByUserId(page, blogPageQueryForOneDTO);
         return new PageResult(page.getTotal(), page.getRecords());
     }
 

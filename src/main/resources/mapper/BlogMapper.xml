@@ -6,7 +6,7 @@
         <id column="id" property="id"/>
         <result column="title" property="title"/>
         <result column="sub_title" property="subTitle"/>
-        <result column="id" property="userId"/>
+        <result column="userId" property="userId"/>
         <result column="username" property="username"/>
         <result column="avatar_url" property="userAvatar"/>
         <result column="categoryName" property="categoryName"/>
@@ -22,7 +22,7 @@
         b.id,
         b.title,
         b.sub_title,
-        u.id,
+        u.id as userId,
         u.username,
         u.avatar_url,
         bc.name AS categoryName,
@@ -66,11 +66,40 @@
         LEFT JOIN user u ON b.user_id = u.id AND u.is_deleted = 0
         LEFT JOIN blog_category bc ON b.category_id = bc.id
         <where>
-            AND u.id = #{userId}
-            AND b.status = 1
+            <if test="blogPageQueryForOneDTO.keyWord != null">
+                AND (b.title LIKE CONCAT('%', #{keyWord}, '%')
+                OR b.sub_title LIKE CONCAT('%', #{keyWord}, '%')
+                OR b.content LIKE CONCAT('%', #{keyWord}, '%'))
+            </if>
+            <if test="blogPageQueryForOneDTO.type == 'article'">
+                AND b.status = 1
+            </if>
+            <if test="blogPageQueryForOneDTO.type == 'draft'">
+                AND b.status = 0
+            </if>
+            AND u.id = #{blogPageQueryForOneDTO.userId}
             AND b.is_deleted = 0
         </where>
-        ORDER BY b.create_time DESC
+        <trim prefix="ORDER BY" suffixOverrides=",">
+            <!-- 按时间排序 -->
+            <if test="blogPageQueryForOneDTO.createTimeOrder != null
+                        and blogPageQueryForOneDTO.createTimeOrder.trim() != ''">
+                b.create_time ${blogPageQueryForOneDTO.createTimeOrder},
+            </if>
+            <!-- 按访问量排序 -->
+            <if test="blogPageQueryForOneDTO.viewCountOrder != null
+                        and blogPageQueryForOneDTO.viewCountOrder.trim() != ''">
+                b.view_count ${blogPageQueryForOneDTO.viewCountOrder},
+            </if>
+            <!-- 默认排序（当所有参数都为空时生效） -->
+            <if test="blogPageQueryForOneDTO.createTimeOrder == null
+                        or blogPageQueryForOneDTO.createTimeOrder.trim() == ''">
+                <if test="blogPageQueryForOneDTO.viewCountOrder == null
+                            or blogPageQueryForOneDTO.viewCountOrder.trim() == ''">
+                    b.create_time DESC
+                </if>
+            </if>
+        </trim>
     </select>
 
 </mapper>
