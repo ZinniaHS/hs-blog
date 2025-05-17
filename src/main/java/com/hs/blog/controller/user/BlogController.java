@@ -86,4 +86,15 @@ public class BlogController {
         return Result.success();
     }
 
+    /**
+     * 删除博客
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/delete")
+    @Operation(summary = "删除博客")
+    public Result batchDeleteBook(@RequestParam("id") Integer id) {
+        blogService.deleteBlog(id);
+        return Result.success();
+    }
 }

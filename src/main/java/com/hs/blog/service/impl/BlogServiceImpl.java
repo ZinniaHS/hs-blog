@@ -117,6 +117,18 @@ public class BlogServiceImpl
     }
 
     /**
+     * 删除博客
+     * @param id
+     * @return
+     */
+    @Override
+    public Result deleteBlog(Integer id) {
+        System.out.println(id);
+//        blogMapper.deleteById(id);
+        return Result.success();
+    }
+
+    /**
      * 获取当前用户登录id
      * @return 返回用户id，不存在则返回-1
      */
@@ -127,7 +139,6 @@ public class BlogServiceImpl
         if (authentication.getPrincipal() instanceof CustomUserDetails) {
             userId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
         }
-        System.out.println("============================="+userId);
         return userId != null ? Integer.valueOf(userId) : -1;
     }
 }

@@ -47,4 +47,11 @@ public interface IBlogService extends IService<Blog> {
      * @return
      */
     Result updateBlog(Blog blog);
+
+    /**
+     * 删除博客
+     * @param id
+     * @return
+     */
+    Result deleteBlog(Integer id);
 }
