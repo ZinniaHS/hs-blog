@@ -37,9 +37,9 @@
         <where>
             <if test="blogPageQueryDTO.keyWord != null
                         and blogPageQueryDTO.keyWord.trim() != ''">
-                AND (b.title LIKE CONCAT('%', #{keyWord}, '%')
-                OR b.sub_title LIKE CONCAT('%', #{keyWord}, '%')
-                OR b.content LIKE CONCAT('%', #{keyWord}, '%'))
+                AND (b.title LIKE CONCAT('%', #{blogPageQueryDTO.keyWord}, '%')
+                OR b.sub_title LIKE CONCAT('%', #{blogPageQueryDTO.keyWord}, '%')
+                OR b.content LIKE CONCAT('%', #{blogPageQueryDTO.keyWord}, '%'))
             </if>
             AND b.status = 1
             AND b.lock_status = 0
@@ -67,9 +67,9 @@
         LEFT JOIN blog_category bc ON b.category_id = bc.id
         <where>
             <if test="blogPageQueryForOneDTO.keyWord != null">
-                AND (b.title LIKE CONCAT('%', #{keyWord}, '%')
-                OR b.sub_title LIKE CONCAT('%', #{keyWord}, '%')
-                OR b.content LIKE CONCAT('%', #{keyWord}, '%'))
+                AND (b.title LIKE CONCAT('%', #{blogPageQueryForOneDTO.keyWord}, '%')
+                OR b.sub_title LIKE CONCAT('%', #{blogPageQueryForOneDTO.keyWord}, '%')
+                OR b.content LIKE CONCAT('%', #{blogPageQueryForOneDTO.keyWord}, '%'))
             </if>
             <if test="blogPageQueryForOneDTO.type == 'article'">
                 AND b.status = 1

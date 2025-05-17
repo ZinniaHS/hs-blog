@@ -4,6 +4,8 @@ import com.hs.blog.pojo.dto.BlogDTO;
 import com.hs.blog.pojo.dto.BlogPageQueryDTO;
 import com.hs.blog.pojo.dto.BlogPageQueryForOneDTO;
 import com.hs.blog.pojo.dto.BookPageQueryDTO;
+import com.hs.blog.pojo.entity.Blog;
+import com.hs.blog.pojo.entity.Book;
 import com.hs.blog.pojo.vo.BlogVO;
 import com.hs.blog.pojo.vo.BookVO;
 import com.hs.blog.result.PageResult;
@@ -70,6 +72,18 @@ public class BlogController {
         PageResult res = blogService.queryAllBlogsByUserId(blogPageQueryForOneDTO);
         System.out.println("==========="+blogPageQueryForOneDTO);
         return Result.success(res);
+    }
+
+    /**
+     * 新增或修改博客
+     * @param blog
+     * @return
+     */
+    @PutMapping
+    @Operation(summary = "新增或修改博客")
+    public Result updateBlog(@RequestBody Blog blog) {
+        blogService.updateBlog(blog);
+        return Result.success();
     }
 
 }

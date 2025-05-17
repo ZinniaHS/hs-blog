@@ -188,7 +188,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
         UserInfoVO userInfoVO;
         // 如果id为-1，则代表是自己的页面
-        if(id == -1){
+        if(id == -1 || Integer.valueOf(userId).equals(id)){
             userInfoVO = userMapper.getUserInfoById(Integer.valueOf(userId));
             userInfoVO.setMyPage(true);
         }else{

@@ -48,17 +48,12 @@ public class BlogServiceImpl
     @Override
     public Result saveBlog(BlogDTO blogDTO) {
         System.out.println("================"+blogDTO);
-        String userId = null;
-        // 获取当前登录用户信息
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getPrincipal() instanceof CustomUserDetails) {
-            userId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
-        }
-        if(userId == null)
+        int userId = getUserId();
+        if(userId == -1)
             return Result.error(MessageConstant.NOT_LOGIN);
         Blog blog = new Blog();
         BeanUtils.copyProperties(blogDTO, blog);
-        blog.setUserId(Integer.valueOf(userId));
+        blog.setUserId(userId);
         this.save(blog);
         return Result.success();
     }
@@ -109,4 +104,30 @@ public class BlogServiceImpl
         return new PageResult(page.getTotal(), page.getRecords());
     }
 
+    /**
+     * 新增或修改博客
+     * @param blog
+     * @return
+     */
+    @Override
+    public Result updateBlog(Blog blog) {
+        blog.setUserId(getUserId());
+        this.saveOrUpdate(blog);
+        return Result.success();
+    }
+
+    /**
+     * 获取当前用户登录id
+     * @return 返回用户id，不存在则返回-1
+     */
+    public synchronized Integer getUserId() {
+        String userId = null;
+        // 获取当前登录用户信息
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof CustomUserDetails) {
+            userId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
+        }
+        System.out.println("============================="+userId);
+        return userId != null ? Integer.valueOf(userId) : -1;
+    }
 }

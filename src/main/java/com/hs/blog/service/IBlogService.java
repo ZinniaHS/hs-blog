@@ -40,4 +40,11 @@ public interface IBlogService extends IService<Blog> {
      * @return
      */
     PageResult queryAllBlogsByUserId(BlogPageQueryForOneDTO blogPageQueryForOneDTO);
+
+    /**
+     * 新增或修改博客
+     * @param blog
+     * @return
+     */
+    Result updateBlog(Blog blog);
 }
