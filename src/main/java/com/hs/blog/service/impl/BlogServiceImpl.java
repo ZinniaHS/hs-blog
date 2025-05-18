@@ -1,6 +1,7 @@
 package com.hs.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -64,9 +65,9 @@ public class BlogServiceImpl
      * @return
      */
     @Override
-    public PageResult pageQueryForUser(BlogPageQueryDTO blogPageQueryDTO) {
+    public PageResult queryBlogByPage(BlogPageQueryDTO blogPageQueryDTO) {
         Page<BlogPageQueryVO> page = new Page<>();
-        IPage<BlogPageQueryVO> res = blogMapper.pageQueryForUser(page, blogPageQueryDTO);
+        IPage<BlogPageQueryVO> res = blogMapper.queryBlogByPage(page, blogPageQueryDTO);
         System.out.println(res.getRecords());
         return new PageResult(page.getTotal(), page.getRecords());
     }
@@ -126,6 +127,52 @@ public class BlogServiceImpl
         System.out.println(id);
 //        blogMapper.deleteById(id);
         return Result.success();
+    }
+
+    /**
+     * 管理端分页查询博客信息
+     * @param blogPageQueryDTO
+     * @return
+     */
+    @Override
+    public PageResult adminQueryBlogByPage(BlogPageQueryDTO blogPageQueryDTO) {
+        Page<BlogPageQueryVO> page = new Page<>();
+        IPage<BlogPageQueryVO> res = blogMapper.adminQueryBlogByPage(page, blogPageQueryDTO);
+        return new PageResult(page.getTotal(), page.getRecords());
+    }
+
+    /**
+     * 更新博客锁定状态
+     * @param lockStatus 当前博客锁定状态
+     * @param id 博客id
+     * @return
+     */
+    @Override
+    public void updateBlogLockStatus(Integer lockStatus, Long id) {
+        UpdateWrapper<Blog> wrapper = new UpdateWrapper<>();
+        wrapper.set("lock_status", lockStatus == 1 ? 0 : 1).eq("id", id);
+        this.update(wrapper);
+    }
+
+    /**
+     * 管理员端修改博客
+     * @param blog
+     * @return
+     */
+    @Override
+    public void updateBlogForAdmin(Blog blog) {
+        this.updateById(blog);
+    }
+
+    /**
+     * 批量删除博客
+     * @param ids 多个选中的博客id
+     * @return
+     */
+    @Override
+    public void batchDeleteBlog(List<Integer> ids) {
+        System.out.println("========================"+ids);
+        this.removeByIds(ids);
     }
 
     /**

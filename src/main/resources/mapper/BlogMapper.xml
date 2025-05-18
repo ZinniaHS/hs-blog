@@ -13,11 +13,13 @@
         <result column="viewCount" property="viewCount"/>
         <result column="likeCount" property="likeCount"/>
         <result column="starCount" property="starCount"/>
+        <result column="status" property="status"/>
+        <result column="lockStatus" property="lockStatus"/>
         <result column="createTime" property="createTime"/>
         <result column="updateTime" property="updateTime"/>
     </resultMap>
 
-    <select id="pageQueryForUser" resultMap="BlogPageQueryVOMap">
+    <select id="queryBlogByPage" resultMap="BlogPageQueryVOMap">
         SELECT
         b.id,
         b.title,
@@ -29,6 +31,8 @@
         b.view_count AS viewCount,
         b.like_count AS likeCount,
         b.star_count AS starCount,
+        b.status,
+        b.lock_status AS lockStatus,
         b.create_time AS createTime,
         b.update_time AS updateTime
         FROM blog b
@@ -100,6 +104,37 @@
                 </if>
             </if>
         </trim>
+    </select>
+
+    <select id="adminQueryBlogByPage" resultType="com.hs.blog.pojo.vo.BlogPageQueryVO">
+        SELECT
+        b.id,
+        b.title,
+        b.sub_title,
+        u.id as userId,
+        u.username,
+        u.avatar_url,
+        bc.name AS categoryName,
+        b.view_count AS viewCount,
+        b.like_count AS likeCount,
+        b.star_count AS starCount,
+        b.status,
+        b.lock_status AS lockStatus,
+        b.create_time AS createTime,
+        b.update_time AS updateTime
+        FROM blog b
+        LEFT JOIN user u ON b.user_id = u.id AND u.is_deleted = 0
+        LEFT JOIN blog_category bc ON b.category_id = bc.id
+        <where>
+            <if test="blogPageQueryDTO.keyWord != null
+                        and blogPageQueryDTO.keyWord.trim() != ''">
+                AND (b.title LIKE CONCAT('%', #{blogPageQueryDTO.keyWord}, '%')
+                OR b.sub_title LIKE CONCAT('%', #{blogPageQueryDTO.keyWord}, '%')
+                OR b.content LIKE CONCAT('%', #{blogPageQueryDTO.keyWord}, '%'))
+            </if>
+            AND b.is_deleted = 0
+        </where>
+        ORDER BY b.create_time DESC
     </select>
 
 </mapper>

@@ -25,7 +25,7 @@ public interface IBlogService extends IService<Blog> {
      * @param blogPageQueryDTO
      * @return
      */
-    PageResult pageQueryForUser(BlogPageQueryDTO blogPageQueryDTO);
+    PageResult queryBlogByPage(BlogPageQueryDTO blogPageQueryDTO);
 
     /**
      * 根据id查询博客信息
@@ -54,4 +54,33 @@ public interface IBlogService extends IService<Blog> {
      * @return
      */
     Result deleteBlog(Integer id);
+
+    /**
+     * 管理端分页查询博客信息
+     * @param blogPageQueryDTO
+     * @return
+     */
+    PageResult adminQueryBlogByPage(BlogPageQueryDTO blogPageQueryDTO);
+
+    /**
+     * 更新博客锁定状态
+     * @param lockStatus 当前博客锁定状态
+     * @param id 博客id
+     * @return
+     */
+    void updateBlogLockStatus(Integer lockStatus, Long id);
+
+    /**
+     * 管理员端修改博客
+     * @param blog
+     * @return
+     */
+    void updateBlogForAdmin(Blog blog);
+
+    /**
+     * 批量删除博客
+     * @param ids 多个选中的博客id
+     * @return
+     */
+    void batchDeleteBlog(List<Integer> ids);
 }

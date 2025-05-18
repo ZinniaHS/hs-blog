@@ -19,6 +19,12 @@ public class BlogPageQueryVO implements Serializable {
     private Integer viewCount;
     private Integer likeCount;
     private Integer starCount;
+    // 分为 草稿: 0
+    //    已发布: 1
+    private Integer status;
+    // 分为 未锁定: 0
+    //       锁定: 1
+    private Integer lockStatus;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 

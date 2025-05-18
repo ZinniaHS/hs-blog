@@ -45,7 +45,7 @@ public class BlogController {
     @GetMapping("/page")
     @Operation(summary = "客户端分页查询博客信息")
     public Result<PageResult> queryBlogByPage(BlogPageQueryDTO blogPageQueryDTO) {
-        PageResult result = blogService.pageQueryForUser(blogPageQueryDTO);
+        PageResult result = blogService.queryBlogByPage(blogPageQueryDTO);
         return Result.success(result);
     }
 
