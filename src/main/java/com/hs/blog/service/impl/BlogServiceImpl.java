@@ -67,9 +67,11 @@ public class BlogServiceImpl
     @Override
     public PageResult queryBlogByPage(BlogPageQueryDTO blogPageQueryDTO) {
         Page<BlogPageQueryVO> page = new Page<>();
+        page.setCurrent(blogPageQueryDTO.getPageNum());  // 设置当前页
+        page.setSize(blogPageQueryDTO.getPageSize());    // 设置每页数量
         IPage<BlogPageQueryVO> res = blogMapper.queryBlogByPage(page, blogPageQueryDTO);
         System.out.println(res.getRecords());
-        return new PageResult(page.getTotal(), page.getRecords());
+        return new PageResult(res.getTotal(), res.getRecords());
     }
 
     /**
@@ -101,6 +103,8 @@ public class BlogServiceImpl
     @Override
     public PageResult queryAllBlogsByUserId(BlogPageQueryForOneDTO blogPageQueryForOneDTO) {
         Page<BlogPageQueryVO> page = new Page<>();
+        page.setCurrent(blogPageQueryForOneDTO.getPageNum());  // 设置当前页
+        page.setSize(blogPageQueryForOneDTO.getPageSize());    // 设置每页数量
         IPage<BlogPageQueryVO> res = blogMapper.queryAllBlogsByUserId(page, blogPageQueryForOneDTO);
         return new PageResult(page.getTotal(), page.getRecords());
     }
@@ -137,8 +141,10 @@ public class BlogServiceImpl
     @Override
     public PageResult adminQueryBlogByPage(BlogPageQueryDTO blogPageQueryDTO) {
         Page<BlogPageQueryVO> page = new Page<>();
+        page.setCurrent(blogPageQueryDTO.getPageNum());  // 设置当前页
+        page.setSize(blogPageQueryDTO.getPageSize());    // 设置每页数量
         IPage<BlogPageQueryVO> res = blogMapper.adminQueryBlogByPage(page, blogPageQueryDTO);
-        return new PageResult(page.getTotal(), page.getRecords());
+        return new PageResult(res.getTotal(), res.getRecords());
     }
 
     /**
@@ -171,7 +177,6 @@ public class BlogServiceImpl
      */
     @Override
     public void batchDeleteBlog(List<Integer> ids) {
-        System.out.println("========================"+ids);
         this.removeByIds(ids);
     }
 
