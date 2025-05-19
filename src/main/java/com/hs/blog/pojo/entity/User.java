@@ -38,6 +38,6 @@ public class User {
     @TableField("update_time")
     private LocalDateTime updateTime;
 
-    @TableLogic
+    @TableLogic(value = "0", delval = "1")
     private Integer isDeleted;
 }

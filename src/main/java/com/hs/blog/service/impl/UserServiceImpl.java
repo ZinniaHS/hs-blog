@@ -7,11 +7,13 @@ import com.hs.blog.constant.MessageConstant;
 import com.hs.blog.context.CustomUserDetails;
 import com.hs.blog.mapper.BlogMapper;
 import com.hs.blog.mapper.UserMapper;
+import com.hs.blog.pojo.dto.UserDetailDTO;
 import com.hs.blog.pojo.dto.UserLoginDTO;
 import com.hs.blog.pojo.dto.UserRegisterDTO;
 import com.hs.blog.pojo.entity.Blog;
 import com.hs.blog.pojo.entity.BlogCategory;
 import com.hs.blog.pojo.entity.User;
+import com.hs.blog.pojo.vo.UserDetailVO;
 import com.hs.blog.pojo.vo.UserInfoVO;
 import com.hs.blog.result.Result;
 import com.hs.blog.service.IUserService;
@@ -225,5 +227,37 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 //                .stream()
 //                .mapToLong(Blog::getStarCount)
 //                .sum());
+    }
+
+    /**
+     * 在资料编辑页面获取用户信息
+     * @param id
+     * @return
+     */
+    @Override
+    public Result<UserDetailVO> getUserDetail(Integer id) {
+        UserDetailVO userDetailVO = new UserDetailVO();
+        User user = this.getById(id);
+        BeanUtils.copyProperties(user, userDetailVO);
+        return Result.success(userDetailVO);
+    }
+
+    /**
+     * 修改用户个人信息
+     * @param userDetailDTO
+     * @return
+     */
+    @Override
+    public void updateUserDetail(UserDetailDTO userDetailDTO) {
+        // 先从数据库获取原始用户数据
+        User user = this.getById(userDetailDTO.getId());
+        if (user == null) {
+            throw new RuntimeException("用户不存在");
+        }
+        user.setUsername(userDetailDTO.getUsername());
+        user.setAvatarUrl(userDetailDTO.getAvatarUrl());
+        user.setDescription(userDetailDTO.getDescription());
+        user.setPhone(userDetailDTO.getPhone());
+        this.updateById(user);
     }
 }

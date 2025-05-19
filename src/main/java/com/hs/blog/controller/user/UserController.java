@@ -1,10 +1,14 @@
 package com.hs.blog.controller.user;
 
+import com.hs.blog.pojo.dto.UserDetailDTO;
 import com.hs.blog.pojo.dto.UserLoginDTO;
 import com.hs.blog.pojo.dto.UserRegisterDTO;
+import com.hs.blog.pojo.entity.Blog;
+import com.hs.blog.pojo.vo.UserDetailVO;
 import com.hs.blog.pojo.vo.UserInfoVO;
 import com.hs.blog.result.Result;
 import com.hs.blog.service.IUserService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -89,6 +93,28 @@ public class UserController {
     @GetMapping("/getUserInfoById")
     public Result<UserInfoVO> getUserInfoById(@RequestParam("id") Integer id) {
         return userService.getUserInfoById(id);
+    }
+
+    /**
+     * 在资料编辑页面获取用户信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/getUserDetail")
+    public Result<UserDetailVO> getUserDetail(@RequestParam("id") Integer id) {
+        return userService.getUserDetail(id);
+    }
+
+    /**
+     * 修改用户个人信息
+     * @param userDetailDTO
+     * @return
+     */
+    @PutMapping
+    @Operation(summary = "修改用户个人信息")
+    public Result updateUserDetail(@RequestBody UserDetailDTO userDetailDTO) {
+        userService.updateUserDetail(userDetailDTO);
+        return Result.success();
     }
 
 }

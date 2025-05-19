@@ -129,7 +129,7 @@ public class BlogServiceImpl
     @Override
     public Result deleteBlog(Integer id) {
         System.out.println(id);
-//        blogMapper.deleteById(id);
+        blogMapper.deleteById(id);
         return Result.success();
     }
 

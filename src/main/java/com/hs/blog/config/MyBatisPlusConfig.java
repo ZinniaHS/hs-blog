@@ -1,6 +1,8 @@
 package com.hs.blog.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
+import com.baomidou.mybatisplus.core.injector.DefaultSqlInjector;
+import com.baomidou.mybatisplus.core.injector.ISqlInjector;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
@@ -21,5 +23,13 @@ public class MyBatisPlusConfig {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor((DbType.MYSQL)));
         return interceptor;
+    }
+
+    /**
+     * 配置逻辑删除
+     */
+    @Bean
+    public ISqlInjector sqlInjector() {
+        return new DefaultSqlInjector();
     }
 }

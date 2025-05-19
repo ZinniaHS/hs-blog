@@ -1,9 +1,11 @@
 package com.hs.blog.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.hs.blog.pojo.dto.UserDetailDTO;
 import com.hs.blog.pojo.dto.UserLoginDTO;
 import com.hs.blog.pojo.dto.UserRegisterDTO;
 import com.hs.blog.pojo.entity.User;
+import com.hs.blog.pojo.vo.UserDetailVO;
 import com.hs.blog.pojo.vo.UserInfoVO;
 import com.hs.blog.result.Result;
 
@@ -61,4 +63,18 @@ public interface IUserService extends IService<User> {
      *         如果code是0，则不是自己的页面，msg是用户id
      */
     Result<UserInfoVO> getUserInfoById(Integer id);
+
+    /**
+     * 在资料编辑页面获取用户信息
+     * @param id
+     * @return
+     */
+    Result<UserDetailVO> getUserDetail(Integer id);
+
+    /**
+     * 修改用户个人信息
+     * @param userDetailDTO
+     * @return
+     */
+    void updateUserDetail(UserDetailDTO userDetailDTO);
 }
