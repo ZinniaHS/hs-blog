@@ -8,6 +8,7 @@ import com.hs.blog.pojo.dto.BlogPageQueryForOneDTO;
 import com.hs.blog.pojo.entity.Blog;
 import com.hs.blog.pojo.vo.BlogPageQueryVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Update;
 
 @Mapper
 public interface BlogMapper extends BaseMapper<Blog> {
@@ -32,4 +33,7 @@ public interface BlogMapper extends BaseMapper<Blog> {
      * @return
      */
     IPage<BlogPageQueryVO> adminQueryBlogByPage(Page<BlogPageQueryVO> page, BlogPageQueryDTO blogPageQueryDTO);
+
+    @Update("UPDATE `hs-blog`.blog SET view_count = view_count + 1 WHERE id = #{blogId}")
+    void incrementViewCount(Integer blogId);
 }

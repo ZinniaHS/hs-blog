@@ -68,7 +68,7 @@ public interface IBlogService extends IService<Blog> {
      * @param id 博客id
      * @return
      */
-    void updateBlogLockStatus(Integer lockStatus, Long id);
+    void updateBlogLockStatus(Integer lockStatus, Integer id);
 
     /**
      * 管理员端修改博客
@@ -83,4 +83,18 @@ public interface IBlogService extends IService<Blog> {
      * @return
      */
     void batchDeleteBlog(List<Integer> ids);
+
+    /**
+     * 博客浏览数量+1
+     * @param id
+     * @return
+     */
+    Result incrementViewCount(Integer id);
+
+    /**
+     * 获取浏览量排行前五的博客
+     * @return
+     */
+    List<Blog> getTopFiveBlog();
+
 }

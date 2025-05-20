@@ -42,7 +42,7 @@ public class BlogController {
     @PostMapping("/lockStatus/{lockStatus}")
     @Operation(summary = "更新博客状态")
     public Result updateBlogLockStatus(@PathVariable("lockStatus") Integer lockStatus,
-                                   @RequestParam("id") Long id) {
+                                   @RequestParam("id") Integer id) {
         System.out.println("lockStatus:"+lockStatus+" id:"+id);
         blogService.updateBlogLockStatus(lockStatus,id);
         return Result.success();

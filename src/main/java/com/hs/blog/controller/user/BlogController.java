@@ -97,4 +97,26 @@ public class BlogController {
         blogService.deleteBlog(id);
         return Result.success();
     }
+
+    /**
+     * 博客浏览数量+1
+     * @param id
+     * @return
+     */
+    @PostMapping("/incrementViewCount/{id}")
+    @Operation(summary = "博客浏览数量+1")
+    public Result incrementViewCount(@PathVariable("id") Integer id) {
+        return blogService.incrementViewCount(id);
+    }
+
+    /**
+     * 获取浏览量排行前五的博客
+     * @return
+     */
+    @GetMapping("/getTopFiveBlog")
+    @Operation(summary = "获取浏览量排行前五的博客")
+    public Result<List<Blog>> getTopFiveBlog() {
+        return Result.success(blogService.getTopFiveBlog());
+    }
+
 }

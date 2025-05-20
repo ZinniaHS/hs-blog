@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @TableName("blog")
 public class Blog {
     @TableId(type = IdType.AUTO)
-    private Long id;
+    private Integer id;
 
     @TableField("title")
     private String title;

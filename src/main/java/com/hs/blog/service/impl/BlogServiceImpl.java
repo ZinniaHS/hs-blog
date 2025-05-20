@@ -1,5 +1,6 @@
 package com.hs.blog.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -7,9 +8,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hs.blog.constant.MessageConstant;
 import com.hs.blog.context.CustomUserDetails;
+import com.hs.blog.pojo.event.BlogViewEvent;
 import com.hs.blog.mapper.BlogCategoryMapper;
 import com.hs.blog.mapper.BlogMapper;
-import com.hs.blog.mapper.BookCategoryMapper;
 import com.hs.blog.mapper.UserMapper;
 import com.hs.blog.pojo.dto.BlogDTO;
 import com.hs.blog.pojo.dto.BlogPageQueryDTO;
@@ -23,16 +24,26 @@ import com.hs.blog.service.IBlogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class BlogServiceImpl
         extends ServiceImpl<BlogMapper, Blog> implements IBlogService {
+
+    private static final String VIEW_COUNT_KEY = "blog:views";
 
     @Autowired
     private BlogMapper blogMapper;
@@ -40,6 +51,10 @@ public class BlogServiceImpl
     private BlogCategoryMapper blogCategoryMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private RedisTemplate redisTemplate;
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     /**
      * 新增博客
@@ -154,7 +169,7 @@ public class BlogServiceImpl
      * @return
      */
     @Override
-    public void updateBlogLockStatus(Integer lockStatus, Long id) {
+    public void updateBlogLockStatus(Integer lockStatus, Integer id) {
         UpdateWrapper<Blog> wrapper = new UpdateWrapper<>();
         wrapper.set("lock_status", lockStatus == 1 ? 0 : 1).eq("id", id);
         this.update(wrapper);
@@ -178,6 +193,85 @@ public class BlogServiceImpl
     @Override
     public void batchDeleteBlog(List<Integer> ids) {
         this.removeByIds(ids);
+    }
+
+    /**
+     * 博客浏览数量+1
+     * @param id
+     * @return
+     */
+    @Override
+    public Result incrementViewCount(Integer id) {
+        // 原子操作：阅读量+1（ZSCORE不存在时会自动创建）
+        redisTemplate.opsForZSet().incrementScore(VIEW_COUNT_KEY, id.toString(), 1);
+        // 发布异步事件更新数据库
+        eventPublisher.publishEvent(new BlogViewEvent(id));
+        return Result.success();
+    }
+
+    /**
+     * 获取浏览量排行前五的博客
+     * @return
+     */
+    @Override
+    public List<Blog> getTopFiveBlog() {
+        try {
+            // 1. 从Redis获取Top5的博客ID（字符串形式）
+            Set<String> blogIdStrings = redisTemplate.opsForZSet()
+                    .reverseRange(VIEW_COUNT_KEY, 0, 4);
+
+            // 2. 无缓存时回源数据库
+            if (CollectionUtils.isEmpty(blogIdStrings)) {
+                log.info("No blog IDs found in Redis, falling back to database");
+                return fallbackToDatabase();
+            }
+
+            // 3. 转换为Integer类型ID
+            List<Integer> blogIds = blogIdStrings.stream()
+                    .filter(Objects::nonNull)
+                    .map(String::trim)
+                    .filter(id -> {
+                        try {
+                            Integer.parseInt(id); // 确保是Integer
+                            return true;
+                        } catch (NumberFormatException e) {
+                            log.warn("Invalid blog ID in Redis: {}", id);
+                            return false;
+                        }
+                    })
+                    .map(Integer::parseInt)
+                    .collect(Collectors.toList());
+
+            if (blogIds.isEmpty()) {
+                log.info("No valid blog IDs found in Redis, falling back to database");
+                return fallbackToDatabase();
+            }
+
+            // 4. 批量查询博客详情
+            List<Blog> blogs = blogMapper.selectBatchIds(blogIds);
+
+            // 5. 按Redis顺序重排序
+            return reorderByRedisRanking(blogIds, blogs);
+        } catch (Exception e) {
+            log.error("Error getting top five blogs from Redis, falling back to database", e);
+            return fallbackToDatabase();
+        }
+    }
+
+    private List<Blog> fallbackToDatabase() {
+        LambdaQueryWrapper<Blog> wrapper = new LambdaQueryWrapper<>();
+        wrapper.orderByDesc(Blog::getViewCount)
+                .last("LIMIT 5");
+        return blogMapper.selectList(wrapper);
+    }
+
+    private List<Blog> reorderByRedisRanking(List<Integer> blogIds, List<Blog> blogs) {
+        Map<Integer, Blog> blogMap = blogs.stream()
+                .collect(Collectors.toMap(Blog::getId, Function.identity()));
+        return blogIds.stream()
+                .map(blogMap::get)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     /**
