@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.hs.blog.pojo.dto.BlogDTO;
 import com.hs.blog.pojo.dto.BlogPageQueryDTO;
 import com.hs.blog.pojo.dto.BlogPageQueryForOneDTO;
+import com.hs.blog.pojo.dto.BlogPageQueryForSubscribeDTO;
 import com.hs.blog.pojo.entity.Blog;
 import com.hs.blog.pojo.vo.BlogVO;
 import com.hs.blog.result.PageResult;
@@ -97,4 +98,9 @@ public interface IBlogService extends IService<Blog> {
      */
     List<Blog> getTopFiveBlog();
 
+    /**
+     * 根据用户id，获取该用户所有关注者的博客
+     * @return
+     */
+    PageResult getSubscription(BlogPageQueryForSubscribeDTO blogPageQueryForSubscribeDTO);
 }

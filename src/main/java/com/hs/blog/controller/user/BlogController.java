@@ -1,9 +1,6 @@
 package com.hs.blog.controller.user;
 
-import com.hs.blog.pojo.dto.BlogDTO;
-import com.hs.blog.pojo.dto.BlogPageQueryDTO;
-import com.hs.blog.pojo.dto.BlogPageQueryForOneDTO;
-import com.hs.blog.pojo.dto.BookPageQueryDTO;
+import com.hs.blog.pojo.dto.*;
 import com.hs.blog.pojo.entity.Blog;
 import com.hs.blog.pojo.entity.Book;
 import com.hs.blog.pojo.vo.BlogVO;
@@ -117,6 +114,16 @@ public class BlogController {
     @Operation(summary = "获取浏览量排行前五的博客")
     public Result<List<Blog>> getTopFiveBlog() {
         return Result.success(blogService.getTopFiveBlog());
+    }
+
+    /**
+     * 根据用户id，获取该用户所有关注者的博客
+     * @return
+     */
+    @GetMapping("/getSubscription")
+    @Operation(summary = "根据用户id，获取该用户所有关注者的博客")
+    public Result<PageResult> getSubscription(BlogPageQueryForSubscribeDTO blogPageQueryForSubscribeDTO) {
+        return Result.success(blogService.getSubscription(blogPageQueryForSubscribeDTO));
     }
 
 }

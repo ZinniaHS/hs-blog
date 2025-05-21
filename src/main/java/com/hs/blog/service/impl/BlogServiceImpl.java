@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hs.blog.constant.MessageConstant;
 import com.hs.blog.context.CustomUserDetails;
+import com.hs.blog.pojo.dto.BlogPageQueryForSubscribeDTO;
 import com.hs.blog.pojo.event.BlogViewEvent;
 import com.hs.blog.mapper.BlogCategoryMapper;
 import com.hs.blog.mapper.BlogMapper;
@@ -219,13 +220,11 @@ public class BlogServiceImpl
             // 1. 从Redis获取Top5的博客ID（字符串形式）
             Set<String> blogIdStrings = redisTemplate.opsForZSet()
                     .reverseRange(VIEW_COUNT_KEY, 0, 4);
-
             // 2. 无缓存时回源数据库
             if (CollectionUtils.isEmpty(blogIdStrings)) {
                 log.info("No blog IDs found in Redis, falling back to database");
                 return fallbackToDatabase();
             }
-
             // 3. 转换为Integer类型ID
             List<Integer> blogIds = blogIdStrings.stream()
                     .filter(Objects::nonNull)
@@ -241,21 +240,37 @@ public class BlogServiceImpl
                     })
                     .map(Integer::parseInt)
                     .collect(Collectors.toList());
-
             if (blogIds.isEmpty()) {
                 log.info("No valid blog IDs found in Redis, falling back to database");
                 return fallbackToDatabase();
             }
-
             // 4. 批量查询博客详情
             List<Blog> blogs = blogMapper.selectBatchIds(blogIds);
-
             // 5. 按Redis顺序重排序
             return reorderByRedisRanking(blogIds, blogs);
         } catch (Exception e) {
             log.error("Error getting top five blogs from Redis, falling back to database", e);
             return fallbackToDatabase();
         }
+    }
+
+    /**
+     * 根据用户id，获取该用户所有关注者的博客
+     * @return
+     */
+    @Override
+    public PageResult getSubscription(BlogPageQueryForSubscribeDTO blogPageQueryForSubscribeDTO) {
+        // 如果userId为-1则表示当前用户查询自己的关注的博主的博客
+        if (blogPageQueryForSubscribeDTO.getUserId() == -1) {
+            // 获取当前登录用户id
+            blogPageQueryForSubscribeDTO.setUserId(getUserId());
+        }
+        Page<BlogPageQueryVO> page = new Page<>();
+        page.setCurrent(blogPageQueryForSubscribeDTO.getPageNum());  // 设置当前页
+        page.setSize(blogPageQueryForSubscribeDTO.getPageSize());    // 设置每页数量
+        IPage<BlogPageQueryVO> res = blogMapper.blogPageQueryForSubscribeDTO(page, blogPageQueryForSubscribeDTO);
+        System.out.println(res.getRecords());
+        return new PageResult(res.getTotal(), res.getRecords());
     }
 
     private List<Blog> fallbackToDatabase() {

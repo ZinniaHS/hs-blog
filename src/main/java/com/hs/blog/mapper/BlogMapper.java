@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hs.blog.pojo.dto.BlogPageQueryDTO;
 import com.hs.blog.pojo.dto.BlogPageQueryForOneDTO;
+import com.hs.blog.pojo.dto.BlogPageQueryForSubscribeDTO;
 import com.hs.blog.pojo.entity.Blog;
 import com.hs.blog.pojo.vo.BlogPageQueryVO;
 import org.apache.ibatis.annotations.Mapper;
@@ -36,4 +37,10 @@ public interface BlogMapper extends BaseMapper<Blog> {
 
     @Update("UPDATE `hs-blog`.blog SET view_count = view_count + 1 WHERE id = #{blogId}")
     void incrementViewCount(Integer blogId);
+
+    /**
+     * 根据用户id，获取该用户所有关注者的博客
+     * @return
+     */
+    IPage<BlogPageQueryVO> blogPageQueryForSubscribeDTO(Page<BlogPageQueryVO> page, BlogPageQueryForSubscribeDTO blogPageQueryForSubscribeDTO);
 }

@@ -137,4 +137,60 @@
         ORDER BY b.create_time DESC
     </select>
 
+    <select id="blogPageQueryForSubscribeDTO" resultMap="BlogPageQueryVOMap">
+        SELECT
+        b.id,
+        b.title,
+        b.sub_title,
+        b.user_id AS userId,
+        u.username,
+        u.avatar_url,
+        bc.name AS categoryName,
+        b.view_count AS viewCount,
+        b.like_count AS likeCount,
+        b.star_count AS starCount,
+        b.status,
+        b.lock_status AS lockStatus,
+        b.create_time AS createTime,
+        b.update_time AS updateTime
+        FROM blog b
+        INNER JOIN user u ON b.user_id = u.id AND u.is_deleted = 0
+        LEFT JOIN blog_category bc ON b.category_id = bc.id
+        <where>
+            b.user_id IN (
+            SELECT user_id
+            FROM user_follower
+            WHERE follower_id = #{blogPageQueryForSubscribeDTO.userId}
+            )
+            <if test="blogPageQueryForSubscribeDTO.keyWord != null">
+                AND (b.title LIKE CONCAT('%', #{blogPageQueryForSubscribeDTO.keyWord}, '%')
+                OR b.sub_title LIKE CONCAT('%', #{blogPageQueryForSubscribeDTO.keyWord}, '%')
+                OR b.content LIKE CONCAT('%', #{blogPageQueryForSubscribeDTO.keyWord}, '%'))
+            </if>
+            AND b.status = 1
+            AND b.lock_status = 0
+            AND b.is_deleted = 0
+        </where>
+        <trim prefix="ORDER BY" suffixOverrides=",">
+            <!-- 按时间排序 -->
+            <if test="blogPageQueryForSubscribeDTO.createTimeOrder != null
+                        and blogPageQueryForSubscribeDTO.createTimeOrder.trim() != ''">
+                b.create_time ${blogPageQueryForSubscribeDTO.createTimeOrder},
+            </if>
+            <!-- 按访问量排序 -->
+            <if test="blogPageQueryForSubscribeDTO.viewCountOrder != null
+                        and blogPageQueryForSubscribeDTO.viewCountOrder.trim() != ''">
+                b.view_count ${blogPageQueryForSubscribeDTO.viewCountOrder},
+            </if>
+            <!-- 默认排序（当所有参数都为空时生效） -->
+            <if test="blogPageQueryForSubscribeDTO.createTimeOrder == null
+                        or blogPageQueryForSubscribeDTO.createTimeOrder.trim() == ''">
+                <if test="blogPageQueryForSubscribeDTO.viewCountOrder == null
+                            or blogPageQueryForSubscribeDTO.viewCountOrder.trim() == ''">
+                    b.create_time DESC
+                </if>
+            </if>
+        </trim>
+    </select>
+
 </mapper>
