@@ -17,6 +17,7 @@ import com.hs.blog.pojo.dto.BlogDTO;
 import com.hs.blog.pojo.dto.BlogPageQueryDTO;
 import com.hs.blog.pojo.dto.BlogPageQueryForOneDTO;
 import com.hs.blog.pojo.entity.*;
+import com.hs.blog.pojo.vo.BlogLikeAndStarVO;
 import com.hs.blog.pojo.vo.BlogPageQueryVO;
 import com.hs.blog.pojo.vo.BlogVO;
 import com.hs.blog.result.PageResult;
@@ -271,6 +272,43 @@ public class BlogServiceImpl
         IPage<BlogPageQueryVO> res = blogMapper.blogPageQueryForSubscribeDTO(page, blogPageQueryForSubscribeDTO);
         System.out.println(res.getRecords());
         return new PageResult(res.getTotal(), res.getRecords());
+    }
+
+    /**
+     * 博客点赞数量+1
+     * @param blogId
+     * @return
+     */
+    @Override
+    public Result incrementLikeCount(Integer blogId) {
+        int userId = getUserId();
+        blogMapper.incrementLikeCount(userId, blogId);
+        return Result.success();
+    }
+
+    /**
+     * 博客收藏数量+1
+     * @param blogId
+     * @return
+     */
+    @Override
+    public Result incrementStarCount(Integer blogId) {
+        int userId = getUserId();
+        blogMapper.incrementStarCount(userId, blogId);
+        return Result.success();
+    }
+
+    /**
+     * 获取博客点赞和收藏的状态
+     * @param blogId
+     * @return
+     */
+    @Override
+    public Result<BlogLikeAndStarVO> getStatusOfLikeAndStar(Integer blogId) {
+        int userId = getUserId();
+        BlogLikeAndStarVO res =
+                blogMapper.getLikeAndStarStatus(userId, blogId);
+        return Result.success(res);
     }
 
     private List<Blog> fallbackToDatabase() {

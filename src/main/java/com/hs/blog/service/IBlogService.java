@@ -6,6 +6,7 @@ import com.hs.blog.pojo.dto.BlogPageQueryDTO;
 import com.hs.blog.pojo.dto.BlogPageQueryForOneDTO;
 import com.hs.blog.pojo.dto.BlogPageQueryForSubscribeDTO;
 import com.hs.blog.pojo.entity.Blog;
+import com.hs.blog.pojo.vo.BlogLikeAndStarVO;
 import com.hs.blog.pojo.vo.BlogVO;
 import com.hs.blog.result.PageResult;
 import com.hs.blog.result.Result;
@@ -103,4 +104,25 @@ public interface IBlogService extends IService<Blog> {
      * @return
      */
     PageResult getSubscription(BlogPageQueryForSubscribeDTO blogPageQueryForSubscribeDTO);
+
+    /**
+     * 博客点赞数量+1
+     * @param blogId
+     * @return
+     */
+    Result incrementLikeCount(Integer blogId);
+
+    /**
+     * 博客收藏数量+1
+     * @param blogId
+     * @return
+     */
+    Result incrementStarCount(Integer blogId);
+
+    /**
+     * 获取博客点赞和收藏的状态
+     * @param blogId
+     * @return
+     */
+    Result<BlogLikeAndStarVO> getStatusOfLikeAndStar(Integer blogId);
 }

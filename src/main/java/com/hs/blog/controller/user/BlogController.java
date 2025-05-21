@@ -3,6 +3,7 @@ package com.hs.blog.controller.user;
 import com.hs.blog.pojo.dto.*;
 import com.hs.blog.pojo.entity.Blog;
 import com.hs.blog.pojo.entity.Book;
+import com.hs.blog.pojo.vo.BlogLikeAndStarVO;
 import com.hs.blog.pojo.vo.BlogVO;
 import com.hs.blog.pojo.vo.BookVO;
 import com.hs.blog.result.PageResult;
@@ -124,6 +125,39 @@ public class BlogController {
     @Operation(summary = "根据用户id，获取该用户所有关注者的博客")
     public Result<PageResult> getSubscription(BlogPageQueryForSubscribeDTO blogPageQueryForSubscribeDTO) {
         return Result.success(blogService.getSubscription(blogPageQueryForSubscribeDTO));
+    }
+
+    /**
+     * 博客点赞数量+1
+     * @param blogId
+     * @return
+     */
+    @PostMapping("/incrementLikeCount/{blogId}")
+    @Operation(summary = "博客点赞数量+1")
+    public Result incrementLikeCount(@PathVariable("blogId") Integer blogId) {
+        return blogService.incrementLikeCount(blogId);
+    }
+
+    /**
+     * 博客收藏数量+1
+     * @param blogId
+     * @return
+     */
+    @PostMapping("/incrementStarCount/{blogId}")
+    @Operation(summary = "博客收藏数量+1")
+    public Result incrementStarCount(@PathVariable("blogId") Integer blogId) {
+        return blogService.incrementStarCount(blogId);
+    }
+
+    /**
+     * 获取博客点赞和收藏的状态
+     * @param blogId
+     * @return
+     */
+    @GetMapping("/getStatusOfLikeAndStar/{blogId}")
+    @Operation(summary = "获取博客点赞和收藏的状态")
+    public Result<BlogLikeAndStarVO> getStatusOfLikeAndStar(@PathVariable("blogId") Integer blogId) {
+        return blogService.getStatusOfLikeAndStar(blogId);
     }
 
 }

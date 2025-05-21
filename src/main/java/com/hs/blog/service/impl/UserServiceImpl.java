@@ -187,6 +187,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof CustomUserDetails) {
             userId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
+        }else{
+            // 如果没有获取到用户信息，则代表是游客
+            userId = "-2";
         }
         UserInfoVO userInfoVO;
         // 如果id为-1，则代表是自己的页面
