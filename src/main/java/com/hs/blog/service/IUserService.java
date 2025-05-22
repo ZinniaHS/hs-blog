@@ -77,4 +77,18 @@ public interface IUserService extends IService<User> {
      * @return
      */
     void updateUserDetail(UserDetailDTO userDetailDTO);
+
+    /**
+     * 关注博主
+     * @param bloggerId
+     * @return
+     */
+    Result subscribeBlogger(Integer bloggerId);
+
+    /**
+     * 取关博主
+     * @param bloggerId
+     * @return
+     */
+    Result unsubscribeBlogger(Integer bloggerId);
 }

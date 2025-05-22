@@ -117,4 +117,26 @@ public class UserController {
         return Result.success();
     }
 
+    /**
+     * 关注博主
+     * @param bloggerId
+     * @return
+     */
+    @PostMapping("/subscribeBlogger/{bloggerId}")
+    @Operation(summary = "关注博主")
+    public Result subscribeBlogger(@PathVariable("bloggerId") Integer bloggerId) {
+        return userService.subscribeBlogger(bloggerId);
+    }
+
+    /**
+     * 取关博主
+     * @param bloggerId
+     * @return
+     */
+    @PostMapping("/unsubscribeBlogger/{bloggerId}")
+    @Operation(summary = "取关博主")
+    public Result unsubscribeBlogger(@PathVariable("bloggerId") Integer bloggerId) {
+        return userService.unsubscribeBlogger(bloggerId);
+    }
+
 }

@@ -2,10 +2,8 @@ package com.hs.blog.controller.user;
 
 import com.hs.blog.pojo.dto.*;
 import com.hs.blog.pojo.entity.Blog;
-import com.hs.blog.pojo.entity.Book;
-import com.hs.blog.pojo.vo.BlogLikeAndStarVO;
+import com.hs.blog.pojo.vo.BlogLikeStarAndFollowVO;
 import com.hs.blog.pojo.vo.BlogVO;
-import com.hs.blog.pojo.vo.BookVO;
 import com.hs.blog.result.PageResult;
 import com.hs.blog.result.Result;
 import com.hs.blog.service.IBlogService;
@@ -128,25 +126,47 @@ public class BlogController {
     }
 
     /**
-     * 博客点赞数量+1
+     * 当前用户对博客点赞数量+1
      * @param blogId
      * @return
      */
     @PostMapping("/incrementLikeCount/{blogId}")
-    @Operation(summary = "博客点赞数量+1")
+    @Operation(summary = "当前用户对博客点赞数量+1")
     public Result incrementLikeCount(@PathVariable("blogId") Integer blogId) {
         return blogService.incrementLikeCount(blogId);
     }
 
     /**
-     * 博客收藏数量+1
+     * 当前用户对博客点赞数量-1
+     * @param blogId
+     * @return
+     */
+    @PostMapping("/decrementLikeCount/{blogId}")
+    @Operation(summary = "当前用户对博客点赞数量-1")
+    public Result decrementLikeCount(@PathVariable("blogId") Integer blogId) {
+        return blogService.decrementLikeCount(blogId);
+    }
+
+    /**
+     * 当前用户对博客收藏数量+1
      * @param blogId
      * @return
      */
     @PostMapping("/incrementStarCount/{blogId}")
-    @Operation(summary = "博客收藏数量+1")
+    @Operation(summary = "当前用户对博客收藏数量+1")
     public Result incrementStarCount(@PathVariable("blogId") Integer blogId) {
         return blogService.incrementStarCount(blogId);
+    }
+
+    /**
+     * 当前用户对博客收藏数量-1
+     * @param blogId
+     * @return
+     */
+    @PostMapping("/decrementStarCount/{blogId}")
+    @Operation(summary = "当前用户对博客收藏数量+1")
+    public Result decrementStarCount(@PathVariable("blogId") Integer blogId) {
+        return blogService.decrementStarCount(blogId);
     }
 
     /**
@@ -154,10 +174,13 @@ public class BlogController {
      * @param blogId
      * @return
      */
-    @GetMapping("/getStatusOfLikeAndStar/{blogId}")
+    @GetMapping("/getLikeStarAndFollowStatus")
     @Operation(summary = "获取博客点赞和收藏的状态")
-    public Result<BlogLikeAndStarVO> getStatusOfLikeAndStar(@PathVariable("blogId") Integer blogId) {
-        return blogService.getStatusOfLikeAndStar(blogId);
+    public Result<BlogLikeStarAndFollowVO> getLikeStarAndFollowStatus(
+       @RequestParam Integer blogId,
+       @RequestParam Integer bloggerId
+    ) {
+        return blogService.getLikeStarAndFollowStatus(blogId,bloggerId);
     }
 
 }

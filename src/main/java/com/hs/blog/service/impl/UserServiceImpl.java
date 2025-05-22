@@ -263,4 +263,44 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         user.setPhone(userDetailDTO.getPhone());
         this.updateById(user);
     }
+
+    /**
+     * 关注博主
+     * @param bloggerId
+     * @return
+     */
+    @Override
+    public Result subscribeBlogger(Integer bloggerId) {
+        // 当前登录用户是粉丝follower
+        Integer followerId = getUserId();
+        userMapper.subscribeBlogger(bloggerId,followerId);
+        return Result.success();
+    }
+
+    /**
+     * 取关博主
+     * @param bloggerId
+     * @return
+     */
+    @Override
+    public Result unsubscribeBlogger(Integer bloggerId) {
+        // 当前登录用户是粉丝follower
+        Integer followerId = getUserId();
+        userMapper.unsubscribeBlogger(bloggerId,followerId);
+        return Result.success();
+    }
+
+    /**
+     * 获取当前用户登录id
+     * @return 返回用户id，不存在则返回-1
+     */
+    public synchronized Integer getUserId() {
+        String userId = null;
+        // 获取当前登录用户信息
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof CustomUserDetails) {
+            userId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
+        }
+        return userId != null ? Integer.valueOf(userId) : -1;
+    }
 }

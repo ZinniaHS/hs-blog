@@ -17,7 +17,7 @@ import com.hs.blog.pojo.dto.BlogDTO;
 import com.hs.blog.pojo.dto.BlogPageQueryDTO;
 import com.hs.blog.pojo.dto.BlogPageQueryForOneDTO;
 import com.hs.blog.pojo.entity.*;
-import com.hs.blog.pojo.vo.BlogLikeAndStarVO;
+import com.hs.blog.pojo.vo.BlogLikeStarAndFollowVO;
 import com.hs.blog.pojo.vo.BlogPageQueryVO;
 import com.hs.blog.pojo.vo.BlogVO;
 import com.hs.blog.result.PageResult;
@@ -286,6 +286,8 @@ public class BlogServiceImpl
         return Result.success();
     }
 
+
+
     /**
      * 博客收藏数量+1
      * @param blogId
@@ -299,15 +301,40 @@ public class BlogServiceImpl
     }
 
     /**
-     * 获取博客点赞和收藏的状态
+     * 当前用户对博客点赞数量-1
      * @param blogId
      * @return
      */
     @Override
-    public Result<BlogLikeAndStarVO> getStatusOfLikeAndStar(Integer blogId) {
+    public Result decrementLikeCount(Integer blogId) {
         int userId = getUserId();
-        BlogLikeAndStarVO res =
-                blogMapper.getLikeAndStarStatus(userId, blogId);
+        blogMapper.decrementLikeCount(userId, blogId);
+        return Result.success();
+    }
+
+    /**
+     * 当前用户对博客收藏数量-1
+     * @param blogId
+     * @return
+     */
+    @Override
+    public Result decrementStarCount(Integer blogId) {
+        int userId = getUserId();
+        blogMapper.decrementStarCount(userId, blogId);
+        return Result.success();
+    }
+
+    /**
+     * 获取博客点赞和收藏以及当前用户对博主的关注状态
+     * @param blogId
+     * @return
+     */
+    @Override
+    public Result<BlogLikeStarAndFollowVO> getLikeStarAndFollowStatus(Integer blogId, Integer bloggerId) {
+        int userId = getUserId();
+        BlogLikeStarAndFollowVO res =
+                blogMapper.getLikeStarAndFollowStatus(userId, blogId, bloggerId);
+        System.out.println("========================"+res);
         return Result.success(res);
     }
 
