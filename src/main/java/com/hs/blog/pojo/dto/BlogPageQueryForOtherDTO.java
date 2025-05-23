@@ -6,7 +6,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class BlogPageQueryForSubscribeDTO implements Serializable {
+public class BlogPageQueryForOtherDTO implements Serializable {
 
     private int userId;
 

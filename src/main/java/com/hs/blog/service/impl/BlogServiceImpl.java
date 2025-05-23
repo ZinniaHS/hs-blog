@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hs.blog.constant.MessageConstant;
 import com.hs.blog.context.CustomUserDetails;
-import com.hs.blog.pojo.dto.BlogPageQueryForSubscribeDTO;
+import com.hs.blog.pojo.dto.BlogPageQueryForOtherDTO;
 import com.hs.blog.pojo.event.BlogViewEvent;
 import com.hs.blog.mapper.BlogCategoryMapper;
 import com.hs.blog.mapper.BlogMapper;
@@ -260,16 +260,16 @@ public class BlogServiceImpl
      * @return
      */
     @Override
-    public PageResult getSubscription(BlogPageQueryForSubscribeDTO blogPageQueryForSubscribeDTO) {
+    public PageResult getSubscription(BlogPageQueryForOtherDTO blogPageQueryForOtherDTO) {
         // 如果userId为-1则表示当前用户查询自己的关注的博主的博客
-        if (blogPageQueryForSubscribeDTO.getUserId() == -1) {
+        if (blogPageQueryForOtherDTO.getUserId() == -1) {
             // 获取当前登录用户id
-            blogPageQueryForSubscribeDTO.setUserId(getUserId());
+            blogPageQueryForOtherDTO.setUserId(getUserId());
         }
         Page<BlogPageQueryVO> page = new Page<>();
-        page.setCurrent(blogPageQueryForSubscribeDTO.getPageNum());  // 设置当前页
-        page.setSize(blogPageQueryForSubscribeDTO.getPageSize());    // 设置每页数量
-        IPage<BlogPageQueryVO> res = blogMapper.blogPageQueryForSubscribeDTO(page, blogPageQueryForSubscribeDTO);
+        page.setCurrent(blogPageQueryForOtherDTO.getPageNum());  // 设置当前页
+        page.setSize(blogPageQueryForOtherDTO.getPageSize());    // 设置每页数量
+        IPage<BlogPageQueryVO> res = blogMapper.getSubscription(page, blogPageQueryForOtherDTO);
         System.out.println(res.getRecords());
         return new PageResult(res.getTotal(), res.getRecords());
     }
@@ -336,6 +336,24 @@ public class BlogServiceImpl
                 blogMapper.getLikeStarAndFollowStatus(userId, blogId, bloggerId);
         System.out.println("========================"+res);
         return Result.success(res);
+    }
+
+    /**
+     * 根据用户id，获取该用户收藏的博客
+     * @return
+     */
+    @Override
+    public PageResult getStarBlogs(BlogPageQueryForOtherDTO blogPageQueryForOtherDTO) {
+        // 如果userId为-1则表示当前用户查询自己的关注的博主的博客
+        if (blogPageQueryForOtherDTO.getUserId() == -1) {
+            // 获取当前登录用户id
+            blogPageQueryForOtherDTO.setUserId(getUserId());
+        }
+        Page<BlogPageQueryVO> page = new Page<>();
+        page.setCurrent(blogPageQueryForOtherDTO.getPageNum());  // 设置当前页
+        page.setSize(blogPageQueryForOtherDTO.getPageSize());    // 设置每页数量
+        IPage<BlogPageQueryVO> res = blogMapper.getStarBlogs(page, blogPageQueryForOtherDTO);
+        return new PageResult(res.getTotal(), res.getRecords());
     }
 
     private List<Blog> fallbackToDatabase() {

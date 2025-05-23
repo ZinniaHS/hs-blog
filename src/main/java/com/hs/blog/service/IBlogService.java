@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.hs.blog.pojo.dto.BlogDTO;
 import com.hs.blog.pojo.dto.BlogPageQueryDTO;
 import com.hs.blog.pojo.dto.BlogPageQueryForOneDTO;
-import com.hs.blog.pojo.dto.BlogPageQueryForSubscribeDTO;
+import com.hs.blog.pojo.dto.BlogPageQueryForOtherDTO;
 import com.hs.blog.pojo.entity.Blog;
 import com.hs.blog.pojo.vo.BlogLikeStarAndFollowVO;
 import com.hs.blog.pojo.vo.BlogVO;
@@ -103,7 +103,7 @@ public interface IBlogService extends IService<Blog> {
      * 根据用户id，获取该用户所有关注者的博客
      * @return
      */
-    PageResult getSubscription(BlogPageQueryForSubscribeDTO blogPageQueryForSubscribeDTO);
+    PageResult getSubscription(BlogPageQueryForOtherDTO blogPageQueryForOtherDTO);
 
     /**
      * 博客点赞数量+1
@@ -140,4 +140,9 @@ public interface IBlogService extends IService<Blog> {
      */
     Result<BlogLikeStarAndFollowVO> getLikeStarAndFollowStatus(Integer blogId, Integer bloggerId);
 
+    /**
+     * 根据用户id，获取该用户收藏的博客
+     * @return
+     */
+    PageResult getStarBlogs(BlogPageQueryForOtherDTO blogPageQueryForOtherDTO);
 }

@@ -121,8 +121,18 @@ public class BlogController {
      */
     @GetMapping("/getSubscription")
     @Operation(summary = "根据用户id，获取该用户所有关注者的博客")
-    public Result<PageResult> getSubscription(BlogPageQueryForSubscribeDTO blogPageQueryForSubscribeDTO) {
-        return Result.success(blogService.getSubscription(blogPageQueryForSubscribeDTO));
+    public Result<PageResult> getSubscription(BlogPageQueryForOtherDTO blogPageQueryForOtherDTO) {
+        return Result.success(blogService.getSubscription(blogPageQueryForOtherDTO));
+    }
+
+    /**
+     * 根据用户id，获取该用户收藏的博客
+     * @return
+     */
+    @GetMapping("/getStarBlogs")
+    @Operation(summary = "根据用户id，获取该用户收藏的博客")
+    public Result<PageResult> getStarBlogs(BlogPageQueryForOtherDTO blogPageQueryForOtherDTO) {
+        return Result.success(blogService.getStarBlogs(blogPageQueryForOtherDTO));
     }
 
     /**

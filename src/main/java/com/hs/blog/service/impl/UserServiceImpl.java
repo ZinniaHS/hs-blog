@@ -66,12 +66,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             return Result.error(MessageConstant.ACCOUNT_NOT_FOUND);
         if(!passwordEncoder.matches(password,user.getPassword()))
             return Result.error(MessageConstant.PASSWORD_ERROR);
-        // 生成token
+        // 将返回map，可以选择把token，userId，username，avatarUrl封装到map中
+        HashMap<String, Object> map = new HashMap<>();
+        // 生成token，并放入结果map中
         HashMap<String, Object> claims = new HashMap<>();
         claims.put("userId", user.getId());
         claims.put("username", user.getUsername());
         String token = jwtUtil.createJWT(claims);
-        return Result.success(token);
+        // 放入其他用户信息
+        map.put("token", token);
+        map.put("userId", user.getId());
+        map.put("username", user.getUsername());
+        map.put("avatarUrl", user.getAvatarUrl());
+        return Result.success(map);
     }
 
 

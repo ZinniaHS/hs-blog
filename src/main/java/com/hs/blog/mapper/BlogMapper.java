@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hs.blog.pojo.dto.BlogPageQueryDTO;
 import com.hs.blog.pojo.dto.BlogPageQueryForOneDTO;
-import com.hs.blog.pojo.dto.BlogPageQueryForSubscribeDTO;
+import com.hs.blog.pojo.dto.BlogPageQueryForOtherDTO;
 import com.hs.blog.pojo.entity.Blog;
 import com.hs.blog.pojo.vo.BlogLikeStarAndFollowVO;
 import com.hs.blog.pojo.vo.BlogPageQueryVO;
@@ -42,7 +42,7 @@ public interface BlogMapper extends BaseMapper<Blog> {
      * 根据用户id，获取该用户所有关注者的博客
      * @return
      */
-    IPage<BlogPageQueryVO> blogPageQueryForSubscribeDTO(Page<BlogPageQueryVO> page, BlogPageQueryForSubscribeDTO blogPageQueryForSubscribeDTO);
+    IPage<BlogPageQueryVO> getSubscription(Page<BlogPageQueryVO> page, BlogPageQueryForOtherDTO blogPageQueryForOtherDTO);
 
     /**
      * 博客点赞数量+1
@@ -100,4 +100,9 @@ public interface BlogMapper extends BaseMapper<Blog> {
     """)
     BlogLikeStarAndFollowVO getLikeStarAndFollowStatus(int userId, Integer blogId, Integer bloggerId);
 
+    /**
+     * 根据用户id，获取该用户收藏的博客
+     * @return
+     */
+    IPage<BlogPageQueryVO> getStarBlogs(Page<BlogPageQueryVO> page, BlogPageQueryForOtherDTO blogPageQueryForOtherDTO);
 }
