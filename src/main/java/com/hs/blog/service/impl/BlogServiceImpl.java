@@ -33,10 +33,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -212,50 +210,6 @@ public class BlogServiceImpl
     }
 
     /**
-     * 获取浏览量排行前五的博客
-     * @return
-     */
-    @Override
-    public List<Blog> getTopFiveBlog() {
-        try {
-            // 1. 从Redis获取Top5的博客ID（字符串形式）
-            Set<String> blogIdStrings = redisTemplate.opsForZSet()
-                    .reverseRange(VIEW_COUNT_KEY, 0, 4);
-            // 2. 无缓存时回源数据库
-            if (CollectionUtils.isEmpty(blogIdStrings)) {
-                log.info("No blog IDs found in Redis, falling back to database");
-                return fallbackToDatabase();
-            }
-            // 3. 转换为Integer类型ID
-            List<Integer> blogIds = blogIdStrings.stream()
-                    .filter(Objects::nonNull)
-                    .map(String::trim)
-                    .filter(id -> {
-                        try {
-                            Integer.parseInt(id); // 确保是Integer
-                            return true;
-                        } catch (NumberFormatException e) {
-                            log.warn("Invalid blog ID in Redis: {}", id);
-                            return false;
-                        }
-                    })
-                    .map(Integer::parseInt)
-                    .collect(Collectors.toList());
-            if (blogIds.isEmpty()) {
-                log.info("No valid blog IDs found in Redis, falling back to database");
-                return fallbackToDatabase();
-            }
-            // 4. 批量查询博客详情
-            List<Blog> blogs = blogMapper.selectBatchIds(blogIds);
-            // 5. 按Redis顺序重排序
-            return reorderByRedisRanking(blogIds, blogs);
-        } catch (Exception e) {
-            log.error("Error getting top five blogs from Redis, falling back to database", e);
-            return fallbackToDatabase();
-        }
-    }
-
-    /**
      * 根据用户id，获取该用户所有关注者的博客
      * @return
      */
@@ -356,6 +310,71 @@ public class BlogServiceImpl
         return new PageResult(res.getTotal(), res.getRecords());
     }
 
+    /**
+     * 获取个人浏览量排行前五的博客
+     * @return
+     */
+    @Override
+    public List<Blog> getTopFiveBlogForOne(Integer userId) {
+        QueryWrapper<Blog> wrapper = new QueryWrapper<>();
+        wrapper.eq("user_id", userId);
+        wrapper.orderByDesc("view_count");
+        List<Blog> res = this.list(wrapper);
+        // 如果少于5条记录直接返回最大记录数
+        return res.subList(0, Math.min(5, res.size()));
+    }
+
+    /**
+     * 获取浏览量排行前五的博客
+     * @return
+     */
+    @Override
+    public List<Blog> getTopFiveBlog() {
+        try {
+            // 1. 从Redis获取Top5的博客ID（字符串形式）
+            Set<String> blogIdStrings = redisTemplate.opsForZSet()
+                    .reverseRange(VIEW_COUNT_KEY, 0, 4);
+            // 2. 无缓存时回源数据库
+            if (CollectionUtils.isEmpty(blogIdStrings)) {
+//                // 若数据库中无数据，Redis 也为空，后续请求会持续穿透到数据库，缓存空值以解决
+//                redisTemplate.opsForValue().set("NULL_RESULT",
+//                        "1", 5, TimeUnit.MINUTES); // 短期缓存空结果
+                log.info("当前无缓存，将从数据库中查询");
+                return fallbackToDatabase();
+            }
+            // 3. 转换为Integer类型ID
+            List<Integer> blogIds = blogIdStrings.stream()
+                    .filter(Objects::nonNull)
+                    .map(String::trim)
+                    .filter(id -> {
+                        try {
+                            Integer.parseInt(id); // 确保是Integer
+                            return true;
+                        } catch (NumberFormatException e) {
+                            log.warn("Invalid blog ID in Redis: {}", id);
+                            return false;
+                        }
+                    })
+                    .map(Integer::parseInt)
+                    .collect(Collectors.toList());
+            if (blogIds.isEmpty()) {
+                log.info("没有在Redis中找到有效的博客ID，回源数据库");
+                return fallbackToDatabase();
+            }
+            // 4. 批量查询博客详情
+            List<Blog> blogs = blogMapper.selectBatchIds(blogIds);
+            // 5. 按Redis顺序重排序
+            return reorderByRedisRanking(blogIds, blogs);
+        } catch (Exception e) {
+            log.error("Error getting top five blogs from Redis, falling back to database", e);
+            return fallbackToDatabase();
+        }
+    }
+
+    /**
+     * 查询数据库获取浏览量最高的五条博客
+     * @return
+     */
     private List<Blog> fallbackToDatabase() {
         LambdaQueryWrapper<Blog> wrapper = new LambdaQueryWrapper<>();
         wrapper.orderByDesc(Blog::getViewCount)
@@ -363,6 +382,12 @@ public class BlogServiceImpl
         return blogMapper.selectList(wrapper);
     }
 
+    /**
+     * 按Redis顺序重排序博客列表
+     * @param blogIds
+     * @param blogs
+     * @return
+     */
     private List<Blog> reorderByRedisRanking(List<Integer> blogIds, List<Blog> blogs) {
         Map<Integer, Blog> blogMap = blogs.stream()
                 .collect(Collectors.toMap(Blog::getId, Function.identity()));

@@ -116,6 +116,17 @@ public class BlogController {
     }
 
     /**
+     * 获取个人浏览量排行前五的博客
+     * @return
+     */
+    @GetMapping("/getTopFiveBlogForOne/{userId}")
+    @Operation(summary = "获取个人浏览量排行前五的博客")
+    public Result<List<Blog>> getTopFiveBlogForOne(@PathVariable("userId") Integer userId) {
+        return Result.success(blogService.getTopFiveBlogForOne(userId));
+    }
+
+
+    /**
      * 根据用户id，获取该用户所有关注者的博客
      * @return
      */

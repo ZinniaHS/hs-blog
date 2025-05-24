@@ -145,4 +145,10 @@ public interface IBlogService extends IService<Blog> {
      * @return
      */
     PageResult getStarBlogs(BlogPageQueryForOtherDTO blogPageQueryForOtherDTO);
+
+    /**
+     * 获取个人浏览量排行前五的博客
+     * @return
+     */
+    List<Blog> getTopFiveBlogForOne(Integer userId);
 }
