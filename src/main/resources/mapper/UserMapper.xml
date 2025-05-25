@@ -5,22 +5,24 @@
     <!-- UserMapper.xml -->
     <select id="getUserInfoById" resultType="com.hs.blog.pojo.vo.UserInfoVO">
         SELECT
-        u.id,
-        u.username,
-        u.email,
-        u.avatar_url as avatarUrl,
-        u.description,
-        u.phone,
-        -- 统计用户博客总数
-        (SELECT COUNT(*) FROM blog WHERE user_id = u.id) as totalBlogs,
-        -- 统计总浏览量（非空时求和，否则返回0）
-        COALESCE((SELECT SUM(view_count) FROM blog WHERE user_id = u.id), 0) as totalViews,
-        COALESCE((SELECT SUM(like_count) FROM blog WHERE user_id = u.id), 0) as totalLikes,
-        COALESCE((SELECT SUM(star_count) FROM blog WHERE user_id = u.id), 0) as totalStars,
-        -- 统计关注者数量
-        (SELECT COUNT(*) FROM user_follower WHERE user_id = u.id) as totalFollowers
+            u.id,
+            u.username,
+            u.email,
+            u.avatar_url AS avatarUrl,
+            u.description,
+            u.phone,
+            (SELECT COUNT(*) FROM blog WHERE user_id = u.id) AS totalBlogs,
+            (SELECT COALESCE(SUM(view_count), 0) FROM blog WHERE user_id = u.id) AS totalViews,
+            (SELECT COUNT(*) FROM user_blog_like l
+                                      JOIN blog b ON l.blog_id = b.id
+             WHERE b.user_id = u.id) AS totalLikes,
+            (SELECT COUNT(*) FROM user_blog_star s
+                                      JOIN blog b ON s.blog_id = b.id
+             WHERE b.user_id = u.id) AS totalStars,
+            (SELECT COUNT(*) FROM user_follower f
+             WHERE f.user_id = u.id) AS totalFollowers
         FROM user u
         WHERE u.id = #{id}
-        AND u.is_deleted = 0  <!-- 排除逻辑删除的记录 -->
+          AND u.is_deleted = 0
     </select>
 </mapper>

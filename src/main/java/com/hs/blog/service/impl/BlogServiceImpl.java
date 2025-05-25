@@ -96,18 +96,18 @@ public class BlogServiceImpl
      */
     @Override
     public BlogVO queryById(Integer id) {
-        BlogVO blogVO = new BlogVO();
-        QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", id);
-        Blog blog = blogMapper.selectOne(queryWrapper);
-        BeanUtils.copyProperties(blog, blogVO);
-        User user = userMapper.selectById(blog.getUserId());
-        blogVO.setUserAvatar(user.getAvatarUrl());
-        blogVO.setUsername(user.getUsername());
-        BlogCategory blogCategory = blogCategoryMapper.selectById(blog.getCategoryId());
-        blogVO.setCategoryName(blogCategory.getName());
-        System.out.println(blogVO);
-        return blogVO;
+//        BlogVO blogVO = new BlogVO();
+//        QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.eq("id", id);
+//        Blog blog = blogMapper.selectOne(queryWrapper);
+//        BeanUtils.copyProperties(blog, blogVO);
+//        User user = userMapper.selectById(blog.getUserId());
+//        blogVO.setUserAvatar(user.getAvatarUrl());
+//        blogVO.setUsername(user.getUsername());
+//        BlogCategory blogCategory = blogCategoryMapper.selectById(blog.getCategoryId());
+//        blogVO.setCategoryName(blogCategory.getName());
+//        return blogVO;
+        return blogMapper.queryById(id);
     }
 
     /**

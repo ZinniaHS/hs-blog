@@ -66,7 +66,6 @@ public class BlogController {
     @Operation(summary = "根据用户id分页查询他的所有博客")
     public Result<PageResult> queryAllBlogsByUserId(BlogPageQueryForOneDTO blogPageQueryForOneDTO) {
         PageResult res = blogService.queryAllBlogsByUserId(blogPageQueryForOneDTO);
-        System.out.println("==========="+blogPageQueryForOneDTO);
         return Result.success(res);
     }
 

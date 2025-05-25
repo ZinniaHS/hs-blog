@@ -208,35 +208,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             userInfoVO = userMapper.getUserInfoById(Integer.valueOf(id));
             userInfoVO.setMyPage(false);
         }
-        System.out.println("==================="+userInfoVO);
         return Result.success(userInfoVO);
-//        // 查询用户博客数量
-//        userInfoVO.setTotalBlogs(Math
-//                .toIntExact(
-//                blogMapper.selectCount(
-//                new QueryWrapper<Blog>()
-//                .eq("user_id", userInfoVO.getId()))));
-//        // 查询总浏览数
-//        userInfoVO.setTotalViews((int) blogMapper.selectList(
-//                        new QueryWrapper<Blog>()
-//                                .eq("user_id", userInfoVO.getId()))
-//                .stream()
-//                .mapToLong(Blog::getViewCount)
-//                .sum());
-//        // 查询总点赞数
-//        userInfoVO.setTotalLikes((int) blogMapper.selectList(
-//                new QueryWrapper<Blog>()
-//                .eq("user_id", userInfoVO.getId()))
-//                .stream()
-//                .mapToLong(Blog::getLikeCount)
-//                .sum());
-//        // 查询总收藏数
-//        userInfoVO.setTotalStars((int) blogMapper.selectList(
-//                        new QueryWrapper<Blog>()
-//                                .eq("user_id", userInfoVO.getId()))
-//                .stream()
-//                .mapToLong(Blog::getStarCount)
-//                .sum());
     }
 
     /**

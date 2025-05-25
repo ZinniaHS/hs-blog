@@ -9,6 +9,7 @@ import com.hs.blog.pojo.dto.BlogPageQueryForOtherDTO;
 import com.hs.blog.pojo.entity.Blog;
 import com.hs.blog.pojo.vo.BlogLikeStarAndFollowVO;
 import com.hs.blog.pojo.vo.BlogPageQueryVO;
+import com.hs.blog.pojo.vo.BlogVO;
 import org.apache.ibatis.annotations.*;
 
 @Mapper
@@ -105,4 +106,11 @@ public interface BlogMapper extends BaseMapper<Blog> {
      * @return
      */
     IPage<BlogPageQueryVO> getStarBlogs(Page<BlogPageQueryVO> page, BlogPageQueryForOtherDTO blogPageQueryForOtherDTO);
+
+    /**
+     * 根据id查询博客信息
+     * @param id
+     * @return
+     */
+    BlogVO queryById(Integer id);
 }

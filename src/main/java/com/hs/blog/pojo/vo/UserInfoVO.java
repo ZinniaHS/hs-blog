@@ -18,8 +18,8 @@ public class UserInfoVO implements Serializable {
     private Integer totalBlogs;
     private Integer totalViews;
     private Integer totalLikes;
-    private Integer totalStars;
-    private Integer totalComments;
+//    private Integer totalStars;
+//    private Integer totalComments;
     private Integer totalFollowers;
 
 }

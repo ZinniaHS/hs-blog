@@ -29,8 +29,8 @@
         u.avatar_url,
         bc.name AS categoryName,
         b.view_count AS viewCount,
-        b.like_count AS likeCount,
-        b.star_count AS starCount,
+        (SELECT COUNT(*) FROM user_blog_like l WHERE l.blog_id = b.id AND l.is_deleted = 0) AS likeCount,
+        (SELECT COUNT(*) FROM user_blog_star s WHERE s.blog_id = b.id AND s.is_deleted = 0) AS starCount,
         b.status,
         b.lock_status AS lockStatus,
         b.create_time AS createTime,
@@ -57,13 +57,15 @@
         b.id,
         b.title,
         b.sub_title,
-        u.id,
+        u.id AS userId,
         u.username,
         u.avatar_url,
         bc.name AS categoryName,
         b.view_count AS viewCount,
-        b.like_count AS likeCount,
-        b.star_count AS starCount,
+        -- 统计当前用户所有博客的点赞总数
+        (SELECT COUNT(*) FROM user_blog_like l WHERE l.blog_id = b.id) AS likeCount,
+        -- 统计当前用户所有博客的收藏总数
+        (SELECT COUNT(*) FROM user_blog_star s WHERE s.blog_id = b.id) AS starCount,
         b.create_time AS createTime,
         b.update_time AS updateTime
         FROM blog b
@@ -116,8 +118,8 @@
         u.avatar_url,
         bc.name AS categoryName,
         b.view_count AS viewCount,
-        b.like_count AS likeCount,
-        b.star_count AS starCount,
+        (SELECT COUNT(*) FROM user_blog_like l WHERE l.blog_id = b.id AND l.is_deleted = 0) AS likeCount,
+        (SELECT COUNT(*) FROM user_blog_star s WHERE s.blog_id = b.id AND s.is_deleted = 0) AS starCount,
         b.status,
         b.lock_status AS lockStatus,
         b.create_time AS createTime,
@@ -142,19 +144,19 @@
         b.id,
         b.title,
         b.sub_title,
-        b.user_id AS userId,
+        u.id as userId,
         u.username,
         u.avatar_url,
         bc.name AS categoryName,
         b.view_count AS viewCount,
-        b.like_count AS likeCount,
-        b.star_count AS starCount,
+        (SELECT COUNT(*) FROM user_blog_like l WHERE l.blog_id = b.id AND l.is_deleted = 0) AS likeCount,
+        (SELECT COUNT(*) FROM user_blog_star s WHERE s.blog_id = b.id AND s.is_deleted = 0) AS starCount,
         b.status,
         b.lock_status AS lockStatus,
         b.create_time AS createTime,
         b.update_time AS updateTime
         FROM blog b
-        INNER JOIN user u ON b.user_id = u.id AND u.is_deleted = 0
+        LEFT JOIN user u ON b.user_id = u.id AND u.is_deleted = 0
         LEFT JOIN blog_category bc ON b.category_id = bc.id
         <where>
             b.user_id IN (
@@ -198,19 +200,19 @@
         b.id,
         b.title,
         b.sub_title,
-        b.user_id AS userId,
+        u.id as userId,
         u.username,
         u.avatar_url,
         bc.name AS categoryName,
         b.view_count AS viewCount,
-        b.like_count AS likeCount,
-        b.star_count AS starCount,
+        (SELECT COUNT(*) FROM user_blog_like l WHERE l.blog_id = b.id AND l.is_deleted = 0) AS likeCount,
+        (SELECT COUNT(*) FROM user_blog_star s WHERE s.blog_id = b.id AND s.is_deleted = 0) AS starCount,
         b.status,
         b.lock_status AS lockStatus,
         b.create_time AS createTime,
         b.update_time AS updateTime
         FROM blog b
-        INNER JOIN user u ON b.user_id = u.id AND u.is_deleted = 0
+        LEFT JOIN user u ON b.user_id = u.id AND u.is_deleted = 0
         LEFT JOIN blog_category bc ON b.category_id = bc.id
         <where>
             b.id IN (
@@ -247,6 +249,38 @@
                 </if>
             </if>
         </trim>
+    </select>
+
+    <select id="queryById" resultType="com.hs.blog.pojo.vo.BlogVO">
+        SELECT
+            b.id,
+            b.title,
+            b.sub_title,
+            b.content,
+            b.user_id AS userId,
+            u.username,
+            u.avatar_url AS userAvatar,
+            bc.name AS categoryName,
+            b.view_count AS viewCount,
+            -- 使用子查询统计点赞数
+            (SELECT COUNT(*)
+             FROM user_blog_like l
+             WHERE l.blog_id = b.id
+               AND l.is_deleted = 0) AS likeCount,
+            -- 使用子查询统计收藏数
+            (SELECT COUNT(*)
+             FROM user_blog_star s
+             WHERE s.blog_id = b.id
+               AND s.is_deleted = 0) AS starCount,
+            b.create_time AS createTime,
+            b.update_time AS updateTime
+        FROM blog b
+                 LEFT JOIN user u ON b.user_id = u.id
+                 LEFT JOIN blog_category bc ON b.category_id = bc.id
+        WHERE b.id = #{id}
+          AND b.status = 1
+          AND b.lock_status = 0
+          AND b.is_deleted = 0
     </select>
 
 </mapper>

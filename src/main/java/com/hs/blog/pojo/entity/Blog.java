@@ -43,11 +43,11 @@ public class Blog {
     @TableField("view_count")
     private Integer viewCount;
 
-    @TableField("like_count")
-    private Integer likeCount;
-
-    @TableField("star_count")
-    private Integer starCount;
+//    @TableField("like_count")
+//    private Integer likeCount;
+//
+//    @TableField("star_count")
+//    private Integer starCount;
 
     @TableField("create_time")
     private LocalDateTime createTime;
