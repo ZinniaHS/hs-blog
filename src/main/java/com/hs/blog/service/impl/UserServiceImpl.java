@@ -15,6 +15,7 @@ import com.hs.blog.pojo.entity.BlogCategory;
 import com.hs.blog.pojo.entity.User;
 import com.hs.blog.pojo.vo.UserDetailVO;
 import com.hs.blog.pojo.vo.UserInfoVO;
+import com.hs.blog.pojo.vo.UserSubscribeBloggerVO;
 import com.hs.blog.result.Result;
 import com.hs.blog.service.IUserService;
 import com.hs.blog.utils.CaptchaUtil;
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -267,6 +269,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         Integer followerId = getUserId();
         userMapper.unsubscribeBlogger(bloggerId,followerId);
         return Result.success();
+    }
+
+    /**
+     * 获取关注的博主列表
+     * @param userId
+     * @return
+     */
+    @Override
+    public Result<List<UserSubscribeBloggerVO>> getSubscribedBlogger(Integer userId) {
+        List<UserSubscribeBloggerVO> res = userMapper.getSubscribedBlogger(userId);
+        return Result.success(res);
     }
 
     /**

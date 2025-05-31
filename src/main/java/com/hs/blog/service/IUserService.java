@@ -7,7 +7,10 @@ import com.hs.blog.pojo.dto.UserRegisterDTO;
 import com.hs.blog.pojo.entity.User;
 import com.hs.blog.pojo.vo.UserDetailVO;
 import com.hs.blog.pojo.vo.UserInfoVO;
+import com.hs.blog.pojo.vo.UserSubscribeBloggerVO;
 import com.hs.blog.result.Result;
+
+import java.util.List;
 
 public interface IUserService extends IService<User> {
 
@@ -91,4 +94,11 @@ public interface IUserService extends IService<User> {
      * @return
      */
     Result unsubscribeBlogger(Integer bloggerId);
+
+    /**
+     * 获取关注的博主列表
+     * @param userId
+     * @return
+     */
+    Result<List<UserSubscribeBloggerVO>> getSubscribedBlogger(Integer userId);
 }

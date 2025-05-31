@@ -25,4 +25,18 @@
         WHERE u.id = #{id}
           AND u.is_deleted = 0
     </select>
+
+    <select id="getSubscribedBlogger" resultType="com.hs.blog.pojo.vo.UserSubscribeBloggerVO">
+        SELECT
+            u.id,
+            u.username,
+            u.avatar_url AS avatarUrl,
+            u.description
+        FROM
+            user u
+                INNER JOIN
+            user_follower uf ON u.id = uf.user_id
+        WHERE
+            uf.follower_id = #{userId}
+    </select>
 </mapper>

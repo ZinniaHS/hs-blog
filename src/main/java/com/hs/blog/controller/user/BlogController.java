@@ -77,6 +77,7 @@ public class BlogController {
     @PutMapping
     @Operation(summary = "新增或修改博客")
     public Result updateBlog(@RequestBody Blog blog) {
+        System.out.println("=================="+blog);
         blogService.updateBlog(blog);
         return Result.success();
     }
