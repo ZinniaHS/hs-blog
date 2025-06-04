@@ -41,6 +41,7 @@ public class SecurityConfig {
                         ).permitAll()
                         .requestMatchers("/admin/login").permitAll()
                         .requestMatchers("/user/**").permitAll()
+                        .requestMatchers("/statistics/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // 允许预检请求
                         .anyRequest().authenticated()
                 )

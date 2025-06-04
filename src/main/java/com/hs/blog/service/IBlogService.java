@@ -12,6 +12,7 @@ import com.hs.blog.result.PageResult;
 import com.hs.blog.result.Result;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IBlogService extends IService<Blog> {
 
@@ -151,4 +152,10 @@ public interface IBlogService extends IService<Blog> {
      * @return
      */
     List<Blog> getTopFiveBlogForOne(Integer userId);
+
+    /**
+     * 根据时间范围返回博客发布和阅读量的趋势数据
+     * @return
+     */
+    Result<Map<String, Object>> getContentTrend(String range);
 }

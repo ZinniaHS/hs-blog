@@ -25,5 +25,4 @@ public class BlogCategory implements Serializable {
     @TableField("parent_id")
     private Integer parentId;
 
-
 }

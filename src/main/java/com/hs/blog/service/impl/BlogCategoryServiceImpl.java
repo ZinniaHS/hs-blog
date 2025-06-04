@@ -1,5 +1,6 @@
 package com.hs.blog.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hs.blog.constant.MessageConstant;
@@ -103,6 +104,32 @@ public class BlogCategoryServiceImpl
     public Result editBlogCategory(BlogCategory blogCategory) {
         this.updateById(blogCategory);
         return Result.success();
+    }
+
+    /**
+     * 获取博客分类统计数据
+     * @return
+     */
+    @Override
+    public Result<List<Map<String, Object>>> getBlogCategoryStatistics() {
+        // 获取所有分类
+        List<BlogCategory> categories = this.list();
+
+        // 构建结果
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        for (BlogCategory category : categories) {
+            Map<String, Object> item = new HashMap<>();
+            item.put("name", category.getName());
+
+            // 统计该分类下的博客数量
+            int count = blogMapper.countByCategoryId(category.getId());
+
+            item.put("value", count);
+            result.add(item);
+        }
+
+        return Result.success(result);
     }
 
     private List<BlogCategoryVO> buildCategoryTree(List<BlogCategory> categories) {

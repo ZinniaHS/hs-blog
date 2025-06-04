@@ -113,4 +113,12 @@ public interface BlogMapper extends BaseMapper<Blog> {
      * @return
      */
     BlogVO queryById(Integer id);
+
+    /**
+     * 统计该分类下的博客数量
+     * @param id
+     * @return
+     */
+    @Select("SELECT COUNT(*) FROM `hs-blog`.blog WHERE category_id = #{id}")
+    int countByCategoryId(Integer id);
 }

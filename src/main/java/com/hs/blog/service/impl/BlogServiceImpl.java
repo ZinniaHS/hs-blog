@@ -33,6 +33,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -322,6 +325,91 @@ public class BlogServiceImpl
         List<Blog> res = this.list(wrapper);
         // 如果少于5条记录直接返回最大记录数
         return res.subList(0, Math.min(5, res.size()));
+    }
+
+    /**
+     * 根据时间范围返回博客发布和阅读量的趋势数据
+     * @return
+     */
+    @Override
+    public Result<Map<String, Object>> getContentTrend(String range) {
+        // 确定日期范围
+        LocalDate endDate = LocalDate.now();
+        LocalDate startDate;
+
+        if ("week".equals(range)) {
+            startDate = endDate.minusDays(6); // 近7天
+        } else {
+            startDate = endDate.minusDays(29); // 近30天
+        }
+
+        // 查询指定日期范围内的博客数据
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.plusDays(1).atStartOfDay();
+
+        // 获取所有符合条件的博客
+        List<Blog> blogs = getBlogsByDateRange(startDateTime, endDateTime);
+
+        // 准备返回数据
+        List<String> dates = new ArrayList<>();
+        List<Integer> articles = new ArrayList<>();
+        List<Integer> views = new ArrayList<>();
+
+        // 按日期分组统计
+        Map<LocalDate, List<Blog>> blogsByDate = blogs.stream()
+                .collect(Collectors.groupingBy(blog ->
+                        blog.getCreateTime().toLocalDate()));
+
+        // 计算每天的文章数和阅读量
+        LocalDate currentDate = startDate;
+        DateTimeFormatter formatter = "week".equals(range) ?
+                DateTimeFormatter.ofPattern("E") : // 周一、周二等
+                DateTimeFormatter.ofPattern("d日"); // 1日、2日等
+
+        while (!currentDate.isAfter(endDate)) {
+            // 添加日期
+            String formattedDate = currentDate.format(formatter);
+            dates.add(formattedDate);
+
+            // 获取当天的博客
+            List<Blog> dailyBlogs = blogsByDate.getOrDefault(currentDate, Collections.emptyList());
+
+            // 当天发布的文章数
+            articles.add(dailyBlogs.size());
+
+            // 当天的阅读量总和
+            int dailyViews = dailyBlogs.stream()
+                    .mapToInt(Blog::getViewCount)
+                    .sum();
+            views.add(dailyViews);
+
+            // 移动到下一天
+            currentDate = currentDate.plusDays(1);
+        }
+
+        // 构建返回结果
+        Map<String, Object> result = new HashMap<>();
+        result.put("dates", dates);
+        result.put("articles", articles);
+        result.put("views", views);
+
+        return Result.success(result);
+    }
+
+    /**
+     * 获取指定日期范围内的博客数据
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    public List<Blog> getBlogsByDateRange(LocalDateTime startTime, LocalDateTime endTime) {
+        LambdaQueryWrapper<Blog> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.ge(Blog::getCreateTime, startTime)
+                .lt(Blog::getCreateTime, endTime)
+                .eq(Blog::getStatus, 1) // 仅统计已发布的文章
+                .orderByAsc(Blog::getCreateTime);
+
+        return this.list(queryWrapper);
     }
 
     /**

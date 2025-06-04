@@ -7,6 +7,7 @@ import com.hs.blog.pojo.vo.BlogCategoryVO;
 import com.hs.blog.result.Result;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IBlogCategoryService extends IService<BlogCategory> {
 
@@ -37,4 +38,10 @@ public interface IBlogCategoryService extends IService<BlogCategory> {
      * @return
      */
     Result editBlogCategory(BlogCategory blogCategory);
+
+    /**
+     * 获取博客分类统计数据
+     * @return
+     */
+    Result<List<Map<String, Object>>> getBlogCategoryStatistics();
 }
