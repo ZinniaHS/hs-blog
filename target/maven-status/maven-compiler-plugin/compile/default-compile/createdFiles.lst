@@ -19,7 +19,6 @@ com\hs\blog\mapper\BookMapper.class
 com\hs\blog\pojo\dto\SelectedCategoryBooksDTO.class
 com\hs\blog\controller\user\BookCategoryController.class
 com\hs\blog\pojo\dto\AdminLoginDTO.class
-com\hs\blog\controller\admin\CommonController.class
 com\hs\blog\utils\JWTUtil.class
 com\hs\blog\config\CorsConfig.class
 com\hs\blog\pojo\vo\BookCategoryVO.class
@@ -31,14 +30,12 @@ com\hs\blog\mapper\BookCategoryMapper.class
 com\hs\blog\mapper\UserMapper.class
 com\hs\blog\pojo\entity\BlogComment.class
 com\hs\blog\utils\CaptchaUtil.class
-com\hs\blog\Interceptor\JwtInterceptor.class
 com\hs\blog\utils\MailUtil.class
 com\hs\blog\pojo\dto\SaveBookCategoryDTO.class
 com\hs\blog\pojo\entity\Admin.class
 com\hs\blog\service\impl\BookServiceImpl.class
 com\hs\blog\pojo\entity\Book.class
 com\hs\blog\controller\admin\LoginController.class
-com\hs\blog\config\WebConfig.class
 com\hs\blog\controller\user\BookController.class
 com\hs\blog\controller\user\UserController.class
 com\hs\blog\properties\AliyunOSSProperties.class

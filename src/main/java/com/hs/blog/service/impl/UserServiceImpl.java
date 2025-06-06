@@ -2,6 +2,9 @@ package com.hs.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hs.blog.constant.MessageConstant;
 import com.hs.blog.context.CustomUserDetails;
@@ -9,6 +12,7 @@ import com.hs.blog.mapper.BlogMapper;
 import com.hs.blog.mapper.UserMapper;
 import com.hs.blog.pojo.dto.UserDetailDTO;
 import com.hs.blog.pojo.dto.UserLoginDTO;
+import com.hs.blog.pojo.dto.UserPageQueryDTO;
 import com.hs.blog.pojo.dto.UserRegisterDTO;
 import com.hs.blog.pojo.entity.Blog;
 import com.hs.blog.pojo.entity.BlogCategory;
@@ -16,6 +20,7 @@ import com.hs.blog.pojo.entity.User;
 import com.hs.blog.pojo.vo.UserDetailVO;
 import com.hs.blog.pojo.vo.UserInfoVO;
 import com.hs.blog.pojo.vo.UserSubscribeBloggerVO;
+import com.hs.blog.result.PageResult;
 import com.hs.blog.result.Result;
 import com.hs.blog.service.IUserService;
 import com.hs.blog.utils.CaptchaUtil;
@@ -280,6 +285,60 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     public Result<List<UserSubscribeBloggerVO>> getSubscribedBlogger(Integer userId) {
         List<UserSubscribeBloggerVO> res = userMapper.getSubscribedBlogger(userId);
         return Result.success(res);
+    }
+
+    /**
+     * 管理端分页查询所有用户
+     * @param userPageQueryDTO
+     * @return
+     */
+    @Override
+    public PageResult userPage(UserPageQueryDTO userPageQueryDTO) {
+        int pageNum = userPageQueryDTO.getPageNum();
+        int pageSize = userPageQueryDTO.getPageSize();
+        Page<User> pageUser = new Page<>(pageNum,pageSize);
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.orderByDesc("create_time");
+        if(userPageQueryDTO.getKeyWord() != null && !"".equals(userPageQueryDTO.getKeyWord())){
+            wrapper.like("username",userPageQueryDTO.getKeyWord()).or()
+                   .like("email",userPageQueryDTO.getKeyWord()).or()
+                   .like("phone",userPageQueryDTO.getKeyWord());
+        }
+        Page<User> page = this.page(pageUser, wrapper);
+        return new PageResult(page.getTotal(), page.getRecords());
+    }
+
+    /**
+     * 更新用户状态
+     * @param lockStatus
+     * @param id
+     * @return
+     */
+    @Override
+    public void updateUserLockStatus(Integer lockStatus, Integer id) {
+        UpdateWrapper<User> wrapper = new UpdateWrapper<>();
+        wrapper.set("lock_status", lockStatus == 1 ? 0 : 1).eq("id", id);
+        this.update(wrapper);
+    }
+
+    /**
+     * 获取用户信息
+     * @param id
+     * @return
+     */
+    @Override
+    public Result<User> getUserById(Integer id) {
+        return Result.success(this.getById(id));
+    }
+
+    /**
+     * 批量删除用户
+     * @param ids
+     * @return
+     */
+    @Override
+    public void batchDeleteUser(List<Integer> ids) {
+        this.removeBatchByIds(ids);
     }
 
     /**

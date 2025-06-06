@@ -32,6 +32,11 @@ public class User {
     @TableField("phone")
     private String phone;
 
+    // 分为 未锁定: 0
+    //       锁定: 1
+    @TableField("lock_status")
+    private Integer lockStatus;
+
     @TableField("create_time")
     private LocalDateTime createTime;
 

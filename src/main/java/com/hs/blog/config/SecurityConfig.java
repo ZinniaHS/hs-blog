@@ -16,8 +16,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-// 你的JWT过滤器请自行import
-
 @Configuration
 public class SecurityConfig {
 
@@ -55,7 +53,10 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         // 配置允许的前端地址
         configuration.setAllowedOrigins(List.of("http://localhost:5173",
-                                                "http://localhost:5174"));
+                                                "http://localhost:5174",
+                                                "http://localhost",
+                                                "http://localhost:80",
+                                                "http://localhost:81"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*")); // 允许所有请求头
         configuration.setAllowCredentials(true); // 允许携带认证信息（如Cookie）
