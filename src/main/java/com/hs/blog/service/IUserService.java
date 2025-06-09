@@ -1,10 +1,8 @@
 package com.hs.blog.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.hs.blog.pojo.dto.UserDetailDTO;
-import com.hs.blog.pojo.dto.UserLoginDTO;
-import com.hs.blog.pojo.dto.UserPageQueryDTO;
-import com.hs.blog.pojo.dto.UserRegisterDTO;
+import com.hs.blog.pojo.dto.*;
+import com.hs.blog.pojo.entity.Book;
 import com.hs.blog.pojo.entity.User;
 import com.hs.blog.pojo.vo.UserDetailVO;
 import com.hs.blog.pojo.vo.UserInfoVO;
@@ -132,4 +130,39 @@ public interface IUserService extends IService<User> {
      * @return
      */
     void batchDeleteUser(List<Integer> ids);
+
+    /**
+     * 获取用户对该博主的关注状态
+     * 进入博主信息页中触发判断，判断是否已经关注该博主
+     * @param bloggerId 对象博主
+     * @return Boolean true 已关注，false 未关注
+     */
+    Result getSubscribeStatus(Integer bloggerId);
+
+    /**
+     * 收藏图书
+     * @param bookId
+     * @return
+     */
+    Result collectBook(Integer bookId);
+
+    /**
+     * 取消收藏图书
+     * @param bookId
+     * @return
+     */
+    Result removeCollectBook(Integer bookId);
+
+    /**
+     * 查询图书是否已加入书架
+     * @param bookId
+     * @return
+     */
+    Result<Boolean> checkCollectBookStatus(Integer bookId);
+
+    /**
+     * 查询用户收藏的图书
+     * @return
+     */
+    PageResult getCollectBooks(BookPageQueryDTO bookPageQueryDTO);
 }

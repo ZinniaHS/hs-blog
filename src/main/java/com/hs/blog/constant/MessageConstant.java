@@ -25,5 +25,5 @@ public class MessageConstant {
     public static final String EXIST_BLOGS = "该二级分类下有博客，不能删除";
     public static final String DELETE_BOOK_CATEGORY_SUCCESS = "图书分类删除成功！";
     public static final String DELETE_BLOG_CATEGORY_SUCCESS = "博客分类删除成功！";
-
+    public static final String SUBSCRIBE_ERROR = "订阅失败,不能关注自己的账号";
 }

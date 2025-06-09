@@ -39,4 +39,18 @@
         WHERE
             uf.follower_id = #{userId}
     </select>
+
+    <select id="getCollectBooks" resultType="com.hs.blog.pojo.entity.Book">
+        SELECT b.*
+        FROM user_book ub
+        LEFT JOIN book b ON ub.book_id = b.id
+        WHERE ub.user_id = #{userId}
+        <if test="bookPageQueryDTO.keyWord != null">
+            AND (b.title LIKE CONCAT('%', #{bookPageQueryDTO.keyWord}, '%')
+            OR b.author LIKE CONCAT('%', #{bookPageQueryDTO.keyWord}, '%')
+            OR b.publisher LIKE CONCAT('%', #{bookPageQueryDTO.keyWord}, '%')
+            OR b.isbn LIKE CONCAT('%', #{bookPageQueryDTO.keyWord}, '%'))
+        </if>
+    </select>
+
 </mapper>

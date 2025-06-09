@@ -1,12 +1,15 @@
 package com.hs.blog.controller.user;
 
+import com.hs.blog.pojo.dto.BookPageQueryDTO;
 import com.hs.blog.pojo.dto.UserDetailDTO;
 import com.hs.blog.pojo.dto.UserLoginDTO;
 import com.hs.blog.pojo.dto.UserRegisterDTO;
 import com.hs.blog.pojo.entity.Blog;
+import com.hs.blog.pojo.entity.Book;
 import com.hs.blog.pojo.vo.UserDetailVO;
 import com.hs.blog.pojo.vo.UserInfoVO;
 import com.hs.blog.pojo.vo.UserSubscribeBloggerVO;
+import com.hs.blog.result.PageResult;
 import com.hs.blog.result.Result;
 import com.hs.blog.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -161,5 +164,62 @@ public class UserController {
         return userService.getSubscribedBlogger(userId);
     }
 
+    /**
+     * 获取用户对该博主的关注状态
+     * 进入博主信息页中触发判断，判断是否已经关注该博主
+     * @param bloggerId 对象博主
+     * @return Boolean true 已关注，false 未关注
+     */
+    @GetMapping("/getSubscribeStatus/{BloggerId}")
+    @Operation(summary = "获取用户对该博主的关注状态")
+    public Result<Boolean> getSubscribeStatus(@PathVariable("BloggerId") Integer bloggerId) {
+        System.out.println("===============================");
+        return userService.getSubscribeStatus(bloggerId);
+    }
+
+    /**
+     * 查询图书是否已加入书架
+     * @param bookId
+     * @return
+     */
+    @GetMapping("/checkCollectBookStatus/{bookId}")
+    @Operation(summary = "查询图书是否已加入书架")
+    public Result<Boolean> checkCollectBookStatus(@PathVariable("bookId") Integer bookId) {
+        return userService.checkCollectBookStatus(bookId);
+    }
+
+    /**
+     * 收藏图书
+     * @param bookId
+     * @return
+     */
+    @PostMapping("/collectBook/{bookId}")
+    @Operation(summary = "收藏图书")
+    public Result collectBook(@PathVariable("bookId") Integer bookId) {
+        return userService.collectBook(bookId);
+    }
+
+    /**
+     * 取消收藏图书
+     * @param bookId
+     * @return
+     */
+    @PostMapping("/removeCollectBook/{bookId}")
+    @Operation(summary = "取消收藏图书")
+    public Result removeCollectBook(@PathVariable("bookId") Integer bookId) {
+        return userService.removeCollectBook(bookId);
+    }
+
+    /**
+     * 查询用户收藏的图书
+     * @return
+     */
+    @GetMapping("/getCollectBooks")
+    @Operation(summary = "查询用户收藏的图书")
+    public Result<PageResult> getCollectBooks(BookPageQueryDTO bookPageQueryDTO) {
+        System.out.println("==========================="+bookPageQueryDTO);
+        PageResult result = userService.getCollectBooks(bookPageQueryDTO);
+        return Result.success(result);
+    }
 
 }

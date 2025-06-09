@@ -10,13 +10,12 @@ import com.hs.blog.constant.MessageConstant;
 import com.hs.blog.context.CustomUserDetails;
 import com.hs.blog.mapper.BlogMapper;
 import com.hs.blog.mapper.UserMapper;
-import com.hs.blog.pojo.dto.UserDetailDTO;
-import com.hs.blog.pojo.dto.UserLoginDTO;
-import com.hs.blog.pojo.dto.UserPageQueryDTO;
-import com.hs.blog.pojo.dto.UserRegisterDTO;
+import com.hs.blog.pojo.dto.*;
 import com.hs.blog.pojo.entity.Blog;
 import com.hs.blog.pojo.entity.BlogCategory;
+import com.hs.blog.pojo.entity.Book;
 import com.hs.blog.pojo.entity.User;
+import com.hs.blog.pojo.vo.BlogPageQueryVO;
 import com.hs.blog.pojo.vo.UserDetailVO;
 import com.hs.blog.pojo.vo.UserInfoVO;
 import com.hs.blog.pojo.vo.UserSubscribeBloggerVO;
@@ -339,6 +338,78 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     @Override
     public void batchDeleteUser(List<Integer> ids) {
         this.removeBatchByIds(ids);
+    }
+
+    /**
+     * 获取用户对该博主的关注状态
+     * 进入博主信息页中触发判断，判断是否已经关注该博主
+     * @param bloggerId 对象博主
+     * @return Boolean true 已关注，false 未关注
+     */
+    @Override
+    public Result<Boolean> getSubscribeStatus(Integer bloggerId) {
+        Integer userId = getUserId();
+        if(userId == -1)
+            return Result.error(MessageConstant.NOT_LOGIN);
+        return Result.success(userMapper.getSubscribeStatus(bloggerId, userId)) ;
+    }
+
+    /**
+     * 收藏图书
+     * @param bookId
+     * @return
+     */
+    @Override
+    public Result collectBook(Integer bookId) {
+        Integer userId = getUserId();
+        if(userId == -1)
+           return Result.error(MessageConstant.NOT_LOGIN);
+        userMapper.collectBook(userId, bookId);
+        return Result.success();
+    }
+
+    /**
+     * 取消收藏图书
+     * @param bookId
+     * @return
+     */
+    @Override
+    public Result removeCollectBook(Integer bookId) {
+        Integer userId = getUserId();
+        if(userId == -1)
+            return Result.error(MessageConstant.NOT_LOGIN);
+        userMapper.removeCollectBook(userId, bookId);
+        return Result.success();
+    }
+
+    /**
+     * 查询图书是否已加入书架
+     * @param bookId
+     * @return
+     */
+    @Override
+    public Result<Boolean> checkCollectBookStatus(Integer bookId) {
+        Integer userId = getUserId();
+        if(userId == -1)
+            return Result.error(MessageConstant.NOT_LOGIN);
+        return Result.success(userMapper.checkCollectBookStatus(userId, bookId));
+    }
+
+    /**
+     * 查询用户收藏的图书
+     * @return
+     */
+    @Override
+    public PageResult getCollectBooks(BookPageQueryDTO bookPageQueryDTO) {
+        Integer userId = getUserId();
+        if(userId == -1)
+            return null;
+        System.out.println("===================="+userId);
+        Page<Book> page = new Page<>();
+        page.setCurrent(bookPageQueryDTO.getPageNum());  // 设置当前页
+        page.setSize(bookPageQueryDTO.getPageSize());    // 设置每页数量
+        IPage<Book> res = userMapper.getCollectBooks(page, bookPageQueryDTO, userId);
+        return new PageResult(page.getTotal(), page.getRecords());
     }
 
     /**
