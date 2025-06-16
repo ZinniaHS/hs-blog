@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  # Nginx 服务（反向代理和静态文件服务器）
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"  # 主机端口 80 映射到容器 80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf  # 挂载自定义配置
+      - ./frontend/admin:/usr/share/nginx/html/admin  # 挂载后台前端静态文件
+      - ./frontend/client:/usr/share/nginx/html/client  # 挂载客户端前端静态文件
+    depends_on:
+      - backend  # 确保后端先启动
+    networks:
+      - hs-blog
+
+  # Spring Boot 后端服务
+  backend:
+    build:
+      context: ./  # Dockerfile 所在目录（项目根目录）
+      dockerfile: Dockerfile  # 指定 Dockerfile
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/hs-blog  # 使用服务名连接
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=123456
+      - SPRING_REDIS_HOST=redis  # Redis 服务名
+      - SPRING_REDIS_PORT=6379
+    ports:
+      - "8080:8080"  # 可选：暴露端口用于调试
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - hs-blog
+
+  # MySQL 数据库服务
+  mysql:
+    image: mysql:8.0.40
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: hs-blog
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 123456
+    volumes:
+      - mysql_data:/var/lib/mysql  # 持久化数据
+    networks:
+      - hs-blog
+
+  # Redis 服务
+  redis:
+    image: redis:latest
+    command: redis-server --appendonly yes  # 启用持久化
+    volumes:
+      - redis_data:/data
+    networks:
+      - hs-blog
+
+# 网络和卷配置
+networks:
+  hs-blog:  # 自定义网络确保服务互通
+    driver: bridge
+
+volumes:
+  mysql_data:  # MySQL 数据卷
+  redis_data:   # Redis 数据卷
