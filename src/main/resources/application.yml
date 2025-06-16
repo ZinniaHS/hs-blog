@@ -1,11 +1,12 @@
 server:
   port: 8080
+  address: 0.0.0.0
 spring:
   application:
     name: hs-blog
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/hs-blog?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://mysql:3306/hs-blog?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
     username: root
     password: 123456
   servlet:
@@ -13,20 +14,24 @@ spring:
       # 文件上传大小限制配置
       max-file-size: 10MB
       max-request-size: 10MB
+  logging:
+    level:
+      org.springframework.security: DEBUG
+      org.springframework.web: DEBUG
   # Redis配置
-  redis:
-    client:
-      host: localhost          # Redis 服务器地址
-      port: 6379               # Redis 端口
-      password:
-      timeout: 2000            # 连接超时时间（毫秒）
-      database: 0              # 使用的 Redis 数据库索引（默认 0）
+  data:
+    redis:
+      host: redis          # Redis 服务器地址 (在Docker网络中就是服务名)
+      port: 6379           # Redis 端口
+      # password:            # 如果你的Redis设置了密码，在这里填写
+      timeout: 2000ms      # 连接超时时间，建议带单位
+      database: 0          # 使用的 Redis 数据库索引
   # 邮箱信息配置
   mail:
     host: smtp.qq.com          # SMTP 服务器地址
     port: 465                  # SSL 端口
     username: 2503442989@qq.com      # 发件邮箱
-    password: wsofjvdhfhcieagg  # 邮箱授权码（非邮箱密码）
+    password: w********  # 邮箱授权码（非邮箱密码）
     protocol: smtps            # 使用SMTP over SSL
     properties:
       mail:
@@ -52,8 +57,8 @@ mybatis-plus:
 aliyun:
   oss:
     endpoint: oss-cn-shenzhen.aliyuncs.com
-    access-key-id: LTAI5tFykkfeZfth3ByWbjx5
-    access-key-secret: zrRnPmpmCIhNqcmYMC0q5pL7YDZYab
+    access-key-id: L*******************
+    access-key-secret: z***************
     bucket-name: hs-blog1
 
 
