@@ -1,0 +1,65 @@
+server:
+  port: 8888
+  address: 0.0.0.0
+spring:
+  application:
+    name: hs-blog
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/hs-blog?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+  servlet:
+    multipart:
+      # 文件上传大小限制配置
+      max-file-size: 10MB
+      max-request-size: 10MB
+  logging:
+    level:
+      org.springframework.security: DEBUG
+      org.springframework.web: DEBUG
+  # Redis配置
+  data:
+    redis:
+      host: localhost          # Redis 服务器地址 (在Docker网络中就是服务名)
+      port: 6379           # Redis 端口
+      # password:            # 如果你的Redis设置了密码，在这里填写
+      timeout: 2000ms      # 连接超时时间，建议带单位
+      database: 0          # 使用的 Redis 数据库索引
+  # 邮箱信息配置
+  mail:
+    host: smtp.qq.com          # SMTP 服务器地址
+    port: 465                  # SSL 端口
+    username: 2503442989@qq.com      # 发件邮箱
+    password: w***  # 邮箱授权码（非邮箱密码）
+    protocol: smtps            # 使用SMTP over SSL
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true        # 启用SSL加密
+          auth: true           # 启用认证
+          connectiontimeout: 5000  # 连接超时时间(毫秒)
+          timeout: 3000        # 读写超时时间(毫秒)
+          writetimeout: 5000   # 写超时时间(毫秒)
+# MyBatis-Plus 配置
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml  # XML 文件位置
+  type-aliases-package: com.example.entity        # 实体类包路径
+  configuration:
+    map-underscore-to-camel-case: true            # 开启驼峰命名转换
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 打印 SQL 日志
+  global-config:
+    db-config:
+      logic-delete-field: isDeleted  # 逻辑删除字段名（需与实体类字段对应）
+      logic-delete-value: 1          # 逻辑删除时该字段的值
+      logic-not-delete-value: 0      # 未删除时该字段的值
+aliyun:
+  oss:
+    endpoint: oss-cn-shenzhen.aliyuncs.com
+    access-key-id: L***
+    access-key-secret: z***
+    bucket-name: hs-blog1
+
+
+
