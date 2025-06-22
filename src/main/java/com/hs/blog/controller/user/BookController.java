@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "客户端书籍接口",description = "书籍相关接口")
 @RestController("userBookController")
-@RequestMapping("/user/book")
+@RequestMapping("/api/user/book")
 public class BookController {
 
     @Autowired

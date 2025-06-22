@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hs.blog.constant.MessageConstant;
+import com.hs.blog.constant.RedisConstant;
 import com.hs.blog.context.CustomUserDetails;
 import com.hs.blog.pojo.dto.BlogPageQueryForOtherDTO;
 import com.hs.blog.pojo.event.BlogViewEvent;
@@ -28,6 +29,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -37,6 +39,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -56,6 +59,8 @@ public class BlogServiceImpl
     private UserMapper userMapper;
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
     @Autowired
     private ApplicationEventPublisher eventPublisher;
 
@@ -99,17 +104,8 @@ public class BlogServiceImpl
      */
     @Override
     public BlogVO queryById(Integer id) {
-//        BlogVO blogVO = new BlogVO();
-//        QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
-//        queryWrapper.eq("id", id);
-//        Blog blog = blogMapper.selectOne(queryWrapper);
-//        BeanUtils.copyProperties(blog, blogVO);
-//        User user = userMapper.selectById(blog.getUserId());
-//        blogVO.setUserAvatar(user.getAvatarUrl());
-//        blogVO.setUsername(user.getUsername());
-//        BlogCategory blogCategory = blogCategoryMapper.selectById(blog.getCategoryId());
-//        blogVO.setCategoryName(blogCategory.getName());
-//        return blogVO;
+        // 异步增加浏览量，提高响应速度
+//        CompletableFuture.runAsync(() -> incrementViewCount(id));
         return blogMapper.queryById(id);
     }
 
@@ -205,10 +201,16 @@ public class BlogServiceImpl
      */
     @Override
     public Result incrementViewCount(Integer id) {
-        // 原子操作：阅读量+1（ZSCORE不存在时会自动创建）
-        redisTemplate.opsForZSet().incrementScore(VIEW_COUNT_KEY, id.toString(), 1);
-        // 发布异步事件更新数据库
-        eventPublisher.publishEvent(new BlogViewEvent(id));
+//        // 原子操作：阅读量+1（ZSCORE不存在时会自动创建）
+//        redisTemplate.opsForZSet().incrementScore(VIEW_COUNT_KEY, id.toString(), 1);
+//        // 发布异步事件更新数据库
+//        eventPublisher.publishEvent(new BlogViewEvent(id));
+
+        // 使用 ZINCRBY 命令，原子性地将指定 blogId 的分数（viewCount）加 1
+        stringRedisTemplate.opsForZSet()
+                .incrementScore(RedisConstant.BLOG_VIEW_COUNT_KEY,
+                        id.toString(), 1);
+
         return Result.success();
     }
 
@@ -418,71 +420,46 @@ public class BlogServiceImpl
      */
     @Override
     public List<Blog> getTopFiveBlog() {
-        try {
-            // 1. 从Redis获取Top5的博客ID（字符串形式）
-            Set<String> blogIdStrings = redisTemplate.opsForZSet()
-                    .reverseRange(VIEW_COUNT_KEY, 0, 4);
-            // 2. 无缓存时回源数据库
-            if (CollectionUtils.isEmpty(blogIdStrings)) {
-//                // 若数据库中无数据，Redis 也为空，后续请求会持续穿透到数据库，缓存空值以解决
-//                redisTemplate.opsForValue().set("NULL_RESULT",
-//                        "1", 5, TimeUnit.MINUTES); // 短期缓存空结果
-                log.info("当前无缓存，将从数据库中查询");
-                return fallbackToDatabase();
-            }
-            // 3. 转换为Integer类型ID
-            List<Integer> blogIds = blogIdStrings.stream()
-                    .filter(Objects::nonNull)
-                    .map(String::trim)
-                    .filter(id -> {
-                        try {
-                            Integer.parseInt(id); // 确保是Integer
-                            return true;
-                        } catch (NumberFormatException e) {
-                            log.warn("Invalid blog ID in Redis: {}", id);
-                            return false;
-                        }
-                    })
-                    .map(Integer::parseInt)
-                    .collect(Collectors.toList());
-            if (blogIds.isEmpty()) {
-                log.info("没有在Redis中找到有效的博客ID，回源数据库");
-                return fallbackToDatabase();
-            }
-            // 4. 批量查询博客详情
-            List<Blog> blogs = blogMapper.selectBatchIds(blogIds);
-            // 5. 按Redis顺序重排序
-            return reorderByRedisRanking(blogIds, blogs);
-        } catch (Exception e) {
-            log.error("Error getting top five blogs from Redis, falling back to database", e);
-            return fallbackToDatabase();
+        // 1. 从 Redis ZSET 中获取浏览量最高的 5 个博客ID
+        // ZREVRANGE 命令用于按分数从高到低返回成员
+        // 0, 4 表示返回排名 0 到 4 的成员，即前 5 名
+        Set<String> topFiveIdsStr = stringRedisTemplate
+                .opsForZSet().reverseRange(RedisConstant
+                        .BLOG_VIEW_COUNT_KEY, 0, 4);
+
+        if (topFiveIdsStr == null || topFiveIdsStr.isEmpty()) {
+            return Collections.emptyList();
         }
-    }
 
-    /**
-     * 查询数据库获取浏览量最高的五条博客
-     * @return
-     */
-    private List<Blog> fallbackToDatabase() {
-        LambdaQueryWrapper<Blog> wrapper = new LambdaQueryWrapper<>();
-        wrapper.orderByDesc(Blog::getViewCount)
-                .last("LIMIT 5");
-        return blogMapper.selectList(wrapper);
-    }
-
-    /**
-     * 按Redis顺序重排序博客列表
-     * @param blogIds
-     * @param blogs
-     * @return
-     */
-    private List<Blog> reorderByRedisRanking(List<Integer> blogIds, List<Blog> blogs) {
-        Map<Integer, Blog> blogMap = blogs.stream()
-                .collect(Collectors.toMap(Blog::getId, Function.identity()));
-        return blogIds.stream()
-                .map(blogMap::get)
-                .filter(Objects::nonNull)
+        // 2. 将字符串ID集合转换为长整型ID列表
+        List<Integer> topFiveIds = topFiveIdsStr.stream()
+                .map(Integer::parseInt)
                 .collect(Collectors.toList());
+
+        // 3. 根据ID列表从数据库中批量查询博客详细信息
+        List<Blog> blogs = blogMapper.selectBatchIds(topFiveIds);
+
+        // 4. 数据库返回的列表顺序不一定是按ID顺序的，需要根据浏览量排名重新排序
+        // 创建一个ID到博客实体的映射，方便快速查找
+        Map<Integer, Blog> blogMap = blogs.stream()
+                .collect(Collectors.toMap(Blog::getId, blog -> blog));
+
+        // 按照从Redis获取的ID顺序（即浏览量从高到低的顺序）来构建最终的返回列表
+        List<Blog> sortedBlogs = topFiveIds.stream()
+                .map(blogMap::get)
+                .filter(Objects::nonNull) // 过滤掉可能已删除的博客
+                .collect(Collectors.toList());
+
+        // 将Redis中最新的浏览量设置回对象中，因为数据库中的可能是旧的
+        sortedBlogs.forEach(blog -> {
+            Double viewCount = stringRedisTemplate.opsForZSet().score(RedisConstant.BLOG_VIEW_COUNT_KEY, blog.getId().toString());
+            if (viewCount != null) {
+                blog.setViewCount(viewCount.intValue());
+            }
+        });
+
+        return sortedBlogs;
+
     }
 
     /**

@@ -18,7 +18,7 @@ import java.util.List;
 @CrossOrigin
 @Tag(name = "后台书籍分类接口",description = "书籍分类接口")
 @RestController("adminBookCategoryController")
-@RequestMapping("/admin/bookCategory")
+@RequestMapping("/api/admin/bookCategory")
 public class BookCategoryController {
 
     @Autowired

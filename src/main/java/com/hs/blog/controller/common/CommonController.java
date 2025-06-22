@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/common")
+@RequestMapping("/api/common")
 @Api(tags = "通用接口")
 @Slf4j
 public class CommonController {

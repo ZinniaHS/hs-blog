@@ -15,7 +15,7 @@ import java.util.List;
 
 @Tag(name = "客户端博客分类接口",description = "博客分类接口")
 @RestController("userBlogCategoryController")
-@RequestMapping("/user/blogCategory")
+@RequestMapping("/api/user/blogCategory")
 public class BlogCategoryController {
 
     @Autowired

@@ -17,7 +17,7 @@ import java.util.Objects;
 
 @RestController
 @Tag(name = "统计接口",description = "统计接口")
-@RequestMapping("/statistics")
+@RequestMapping("/api/statistics")
 public class StatisticsController {
 
     @Autowired

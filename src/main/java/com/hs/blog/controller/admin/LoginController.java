@@ -15,7 +15,7 @@ import java.util.Objects;
 @Tag(name = "管理员登录接口",description = "管理员登录接口")
 @RestController
 @Slf4j
-@RequestMapping("/admin/login")
+@RequestMapping("/api/admin/login")
 public class LoginController {
 
     @Autowired
@@ -23,6 +23,7 @@ public class LoginController {
 
     @PostMapping
     public Result login(@RequestBody AdminLoginDTO adminLoginDTO) {
+        log.info(">>>>>> Login endpoint /api/admin/login was called! <<<<<<");
 //        System.out.println(adminLoginDTO);
         if (!Objects.equals("admin", adminLoginDTO.getUsername())
                 || !Objects.equals("123456", adminLoginDTO.getPassword())) {

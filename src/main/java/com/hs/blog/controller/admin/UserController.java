@@ -16,7 +16,7 @@ import java.util.List;
 
 @Tag(name = "管理端用户接口")
 @RestController("admin-userController")
-@RequestMapping("/admin/user")
+@RequestMapping("/api/admin/user")
 public class UserController {
 
     @Autowired

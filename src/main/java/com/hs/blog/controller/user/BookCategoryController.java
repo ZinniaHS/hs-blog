@@ -18,7 +18,7 @@ import java.util.List;
 
 @Tag(name = "客户端书籍分类接口",description = "书籍分类接口")
 @RestController("userBookCategoryController")
-@RequestMapping("/user/bookCategory")
+@RequestMapping("/api/user/bookCategory")
 public class BookCategoryController {
 
     @Autowired

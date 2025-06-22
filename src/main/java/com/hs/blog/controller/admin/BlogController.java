@@ -15,7 +15,7 @@ import java.util.List;
 
 @Tag(name = "管理端博客接口",description = "博客接口")
 @RestController("adminBlogController")
-@RequestMapping("/admin/blog")
+@RequestMapping("/api/admin/blog")
 public class BlogController {
 
     @Autowired
